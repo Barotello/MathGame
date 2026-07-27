@@ -21,6 +21,7 @@ type Props = {
   levelRecords: Record<number, LevelRecord>;
   onClose: () => void;
   onOpenWallBreaker: () => void;
+  onOpenWordWheel: () => void;
   onRestart: () => void;
   onSelectLevel: (index: number) => void;
   onShowHintsChange: (value: boolean) => void;
@@ -36,6 +37,7 @@ export function SettingsModal({
   levelRecords,
   onClose,
   onOpenWallBreaker,
+  onOpenWordWheel,
   onRestart,
   onSelectLevel,
   onShowHintsChange,
@@ -155,6 +157,35 @@ export function SettingsModal({
                   </Text>
                 </Pressable>
 
+
+                <Pressable
+                  accessibilityLabel="Ekstra Modlar, Kelime Çarkı"
+                  accessibilityRole="button"
+                  onPress={onOpenWordWheel}
+                  style={({ pressed }) => [
+                    styles.modeRow,
+                    paper && styles.modeRowPaper,
+                    pressed && styles.buttonPressed,
+                  ]}
+                >
+                  <View style={[styles.modeIcon, styles.wordModeIcon]}>
+                    <Text style={styles.modeIconText}>ABC</Text>
+                  </View>
+                  <View style={styles.rowCopy}>
+                    <Text style={[styles.modeEyebrow, paper && styles.eyebrowPaper]}>
+                      TÜRKÇE KELİME MODU
+                    </Text>
+                    <Text style={[styles.rowTitle, paper && styles.textPaper]}>
+                      Kelime Çarkı
+                    </Text>
+                    <Text style={[styles.rowText, paper && styles.mutedTextPaper]}>
+                      İpucunu oku, harfleri aç ve kelimeyi bul
+                    </Text>
+                  </View>
+                  <Text style={[styles.themeChevron, paper && styles.mutedTextPaper]}>
+                    ›
+                  </Text>
+                </Pressable>
                 <LevelPicker
                   completedLevelNumbers={completedLevelNumbers}
                   currentLevelIndex={currentLevelIndex}
@@ -426,6 +457,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 14,
     backgroundColor: '#6F845D',
+  },
+  wordModeIcon: {
+    backgroundColor: '#9C7658',
   },
   modeIconText: {
     color: '#FFFFFF',

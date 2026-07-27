@@ -7,7 +7,7 @@ type Props = {
   themeId: ThemeId;
 };
 
-const options: ThemeId[] = ['nature', 'paper'];
+const options: ThemeId[] = ['paper', 'nature'];
 
 export function ThemePicker({ onSelect, themeId }: Props) {
   const paper = themeId === 'paper';

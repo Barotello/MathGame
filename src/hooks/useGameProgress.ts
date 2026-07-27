@@ -21,7 +21,7 @@ const defaultProgress: GameProgress = {
   settings: {
     showHints: true,
     autoAdvance: true,
-    themeId: 'nature',
+    themeId: 'paper',
   },
 };
 

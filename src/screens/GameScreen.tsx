@@ -90,9 +90,13 @@ type MergeAnimation = {
 
 type Props = {
   onOpenWallBreaker: () => void;
+  onOpenWordWheel: () => void;
 };
 
-export function GameScreen({ onOpenWallBreaker }: Props) {
+export function GameScreen({
+  onOpenWallBreaker,
+  onOpenWordWheel,
+}: Props) {
   const { width } = useWindowDimensions();
   const [levelIndex, setLevelIndex] = useState(0);
   const [isDailyMode, setIsDailyMode] = useState(false);
@@ -1236,6 +1240,10 @@ export function GameScreen({ onOpenWallBreaker }: Props) {
         onOpenWallBreaker={() => {
           setSettingsOpen(false);
           onOpenWallBreaker();
+        }}
+        onOpenWordWheel={() => {
+          setSettingsOpen(false);
+          onOpenWordWheel();
         }}
         onRestart={() => {
           setSettingsOpen(false);
