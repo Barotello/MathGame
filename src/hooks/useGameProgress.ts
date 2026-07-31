@@ -11,10 +11,15 @@ import type {
   LevelRecord,
 } from '../types/progress';
 
-const STORAGE_KEY = 'hedef-sayi-progress-v1';
+const STORAGE_KEY = 'hedef-sayi-progress-v2';
+
+function createAnonymousPlayerId() {
+  return `player-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+}
 
 const defaultProgress: GameProgress = {
-  schemaVersion: 1,
+  schemaVersion: 2,
+  playerId: createAnonymousPlayerId(),
   completedLevelNumbers: [],
   levelRecords: {},
   lastLevelNumber: 1,
@@ -100,7 +105,7 @@ export function useGameProgress() {
         if (!stored || !active) return;
         const parsed = JSON.parse(stored) as Partial<GameProgress>;
 
-        if (parsed.schemaVersion !== 1) return;
+        if (parsed.schemaVersion !== 2) return;
         setProgress({
           ...defaultProgress,
           ...parsed,
@@ -186,6 +191,13 @@ export function useGameProgress() {
     setProgress((current) => ({ ...current, lastLevelNumber }));
   }, []);
 
+  const setPlayerName = useCallback((playerName: string) => {
+    setProgress((current) => ({
+      ...current,
+      playerName: playerName.trim(),
+    }));
+  }, []);
+
   const recordDailyCompletion = useCallback((dateStr: string) => {
     setProgress((current) => {
       if (current.lastDailyCompletedDate === dateStr) {
@@ -206,7 +218,7 @@ export function useGameProgress() {
     recordCompletion,
     recordDailyCompletion,
     setLastLevelNumber,
+    setPlayerName,
     updateSettings,
   };
 }
-

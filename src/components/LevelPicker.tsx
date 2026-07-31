@@ -151,23 +151,15 @@ export function LevelPicker({
                 ))}
               </View>
               {record?.bestScore ? (
-                <View
+                <Text
                   style={[
-                    styles.scoreBadge,
-                    paper && styles.scoreBadgePaper,
-                    current && styles.scoreBadgeCurrent,
+                    styles.score,
+                    paper && styles.scorePaper,
+                    current && styles.scoreCurrent,
                   ]}
                 >
-                  <Text
-                    style={[
-                      styles.score,
-                      paper && styles.scorePaper,
-                      current && styles.scoreCurrent,
-                    ]}
-                  >
-                    {record.bestScore} PUAN
-                  </Text>
-                </View>
+                  {record.bestScore} PUAN
+                </Text>
               ) : !unlocked ? (
                 <Text style={[styles.lock, paper && styles.lockPaper]}>⌑</Text>
               ) : null}
@@ -410,30 +402,15 @@ const styles = StyleSheet.create({
   starsCompleted: {
     color: '#FFFFFF',
   },
-  scoreBadge: {
-    minWidth: 60,
-    marginTop: 4,
-    paddingHorizontal: 6,
-    paddingVertical: 3,
-    alignItems: 'center',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.16)',
-    backgroundColor: 'rgba(3, 10, 7, 0.34)',
-  },
-  scoreBadgePaper: {
-    borderColor: 'rgba(74, 68, 63, 0.14)',
-    backgroundColor: 'rgba(74, 68, 63, 0.08)',
-  },
-  scoreBadgeCurrent: {
-    borderColor: 'rgba(255, 255, 255, 0.24)',
-    backgroundColor: 'rgba(2, 22, 40, 0.38)',
-  },
   score: {
+    minWidth: 60,
+    marginTop: 7,
+    paddingHorizontal: 2,
     color: 'rgba(255, 255, 255, 0.9)',
     fontSize: 9,
     fontWeight: '900',
     letterSpacing: 0.15,
+    textAlign: 'center',
     fontVariant: ['tabular-nums'],
   },
   scoreCompleted: {
@@ -444,8 +421,5 @@ const styles = StyleSheet.create({
   },
   scoreCurrent: {
     color: '#FFFFFF',
-  },
-  scoreCurrentPaper: {
-    color: 'rgba(255, 255, 255, 0.82)',
   },
 });

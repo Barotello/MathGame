@@ -12,7 +12,7 @@ export function GestureTutorialOverlay({ paper = false }: Props) {
     const animation = Animated.loop(
       Animated.sequence([
         Animated.timing(translateY, {
-          toValue: -28,
+          toValue: -5,
           duration: 900,
           useNativeDriver: true,
         }),
@@ -44,18 +44,22 @@ export function GestureTutorialOverlay({ paper = false }: Props) {
 
 const styles = StyleSheet.create({
   overlay: {
-    position: 'absolute',
-    top: 60,
+    width: '100%',
+    maxWidth: 420,
     alignSelf: 'center',
-    zIndex: 99,
+    marginBottom: 14,
   },
   badge: {
+    minHeight: 46,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: 10,
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 22,
+    borderCurve: 'continuous',
+    overflow: 'hidden',
     backgroundColor: 'rgba(0, 122, 255, 0.9)',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },

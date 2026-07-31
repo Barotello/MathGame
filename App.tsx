@@ -9,19 +9,33 @@ type AppMode = 'classic' | 'wall-breaker' | 'word-wheel';
 
 export default function App() {
   const [mode, setMode] = useState<AppMode>('classic');
+  const [openGeneralSettings, setOpenGeneralSettings] = useState(false);
 
   return (
     <>
       <StatusBar style="dark" />
       {mode === 'classic' ? (
         <GameScreen
-          onOpenWallBreaker={() => setMode('wall-breaker')}
-          onOpenWordWheel={() => setMode('word-wheel')}
+          openSettingsInitially={openGeneralSettings}
+          onOpenWallBreaker={() => {
+            setOpenGeneralSettings(false);
+            setMode('wall-breaker');
+          }}
+          onOpenWordWheel={() => {
+            setOpenGeneralSettings(false);
+            setMode('word-wheel');
+          }}
         />
       ) : mode === 'wall-breaker' ? (
         <WallBreakerScreen onBack={() => setMode('classic')} />
       ) : (
-        <WordWheelScreen onBack={() => setMode('classic')} />
+        <WordWheelScreen
+          onBack={() => setMode('classic')}
+          onOpenSettings={() => {
+            setOpenGeneralSettings(true);
+            setMode('classic');
+          }}
+        />
       )}
     </>
   );

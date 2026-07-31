@@ -63,10 +63,11 @@ export function SettingsModal({
         />
 
         <BlurView
-          intensity={paper ? 24 : 60}
-          tint={paper ? "light" : "dark"}
+          intensity={paper ? 78 : 60}
+          tint={paper ? 'systemThinMaterialLight' : 'dark'}
           style={[styles.panel, paper && styles.panelPaper]}
         >
+          {paper ? <View pointerEvents="none" style={styles.paperGlassSheen} /> : null}
           <ScrollView
             contentContainerStyle={styles.content}
             showsVerticalScrollIndicator={false}
@@ -159,7 +160,7 @@ export function SettingsModal({
 
 
                 <Pressable
-                  accessibilityLabel="Ekstra Modlar, Kelime Çarkı"
+                  accessibilityLabel="Ana Oyun Modu, Türkçe"
                   accessibilityRole="button"
                   onPress={onOpenWordWheel}
                   style={({ pressed }) => [
@@ -173,7 +174,7 @@ export function SettingsModal({
                   </View>
                   <View style={styles.rowCopy}>
                     <Text style={[styles.modeEyebrow, paper && styles.eyebrowPaper]}>
-                      TÜRKÇE KELİME MODU
+                      ANA OYUN MODU · TÜRKÇE
                     </Text>
                     <Text style={[styles.rowTitle, paper && styles.textPaper]}>
                       Kelime Çarkı
@@ -286,6 +287,7 @@ const styles = StyleSheet.create({
     elevation: 18,
   },
   content: {
+    zIndex: 1,
     padding: 20,
   },
   header: {
@@ -414,13 +416,21 @@ const styles = StyleSheet.create({
     shadowColor: '#4A443F',
   },
   backdropPaper: {
-    backgroundColor: 'rgba(74, 68, 63, 0.28)',
+    backgroundColor: 'rgba(74, 68, 63, 0.22)',
   },
   panelPaper: {
-    borderColor: '#E5E0DA',
-    backgroundColor: 'rgba(255, 255, 255, 0.94)',
+    borderColor: 'rgba(255, 255, 255, 0.88)',
+    backgroundColor: 'rgba(249, 246, 242, 0.38)',
     shadowColor: '#8C847E',
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.24,
+  },
+  paperGlassSheen: {
+    ...StyleSheet.absoluteFill,
+    borderRadius: 28,
+    borderTopWidth: 1,
+    borderLeftWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.72)',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
   },
   textPaper: {
     color: '#4A443F',
@@ -430,8 +440,8 @@ const styles = StyleSheet.create({
   },
   closeButtonPaper: {
     borderWidth: 1,
-    borderColor: '#E5E0DA',
-    backgroundColor: '#F2EDE7',
+    borderColor: 'rgba(255, 255, 255, 0.82)',
+    backgroundColor: 'rgba(242, 237, 231, 0.7)',
   },
   modeRow: {
     marginTop: 16,

@@ -1,5 +1,6 @@
 import { validateDifficultyCurve } from '../game/difficulty';
 import { isKnownSolutionValid } from '../game/engine';
+import { generateAll100Levels } from '../game/levelGenerator';
 import { fraction } from '../game/mathValue';
 import type { Level, MathValue, NumberCell, Operator } from '../types/game';
 
@@ -706,20 +707,18 @@ const base30Levels: Level[] = [
 ];
 
 const handcraftedLevels = base30Levels;
-const invalidLevel = handcraftedLevels.find((level) => !isKnownSolutionValid(level));
+const allLevels = generateAll100Levels(handcraftedLevels);
+const invalidLevel = allLevels.find((level) => !isKnownSolutionValid(level));
 
 if (invalidLevel) {
   throw new Error('Bilinen çözüm doğrulanamadı: ' + invalidLevel.id);
 }
 
-const difficultyIssues = validateDifficultyCurve(handcraftedLevels);
+const difficultyIssues = validateDifficultyCurve(allLevels);
 
 if (difficultyIssues.length > 0) {
   throw new Error('Zorluk eğrisi doğrulanamadı: ' + difficultyIssues.join('; '));
 }
 
-import { generateAll100Levels } from '../game/levelGenerator';
-
-export const levels: Level[] = generateAll100Levels(handcraftedLevels);
+export const levels: Level[] = allLevels;
 export const firstLevel = levels[0];
-

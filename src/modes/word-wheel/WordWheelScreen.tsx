@@ -1,4 +1,5 @@
 import * as Haptics from 'expo-haptics';
+import { type AudioPlayer, useAudioPlayer } from 'expo-audio';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated,
@@ -9,65 +10,147 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from 'react-native';
 
 import { useGameProgress } from '../../hooks/useGameProgress';
+import { MainModeSwitch } from '../../components/main-mode-switch';
 import { LetterSlot } from './LetterSlot';
 import { TurkishKeyboard } from './TurkishKeyboard';
-import { threeLetterWords } from './data/threeLetterWords';
+import { wordBank } from './data/wordBank';
 import { useWordWheelProgress } from './useWordWheelProgress';
 import {
   applyPenalty,
-  BASE_ROUND_SCORE,
+  getBaseRoundScore,
   getMaxReveals,
   getRevealCost,
   getWordLetters,
   isCorrectGuess,
   revealRandomIndex,
+  SESSION_DURATION_SECONDS,
   validateWordEntries,
-  WRONG_GUESS_PENALTY,
 } from './wordWheelEngine';
-import { selectNextWord } from './wordSelection';
+import { getWordLengthForLevel, selectNextWord } from './wordSelection';
+import { SUCCESS_SOUND, WRONG_SOUND } from './word-wheel-sounds';
+import type { WordRoundStatus } from './types';
 
 const GLASS_BACKGROUND = require('../../../assets/nature-background.png');
 const REVEAL_DURATION_MS = 850;
+const LETTER_CHECK_DELAY_MS = 900;
 
 type Props = {
   onBack: () => void;
+  onOpenSettings: () => void;
 };
 
-export function WordWheelScreen({ onBack }: Props) {
-  const { progress, recordSolved } = useWordWheelProgress();
-  const { progress: gameProgress, updateSettings } = useGameProgress();
+export function WordWheelScreen({ onBack, onOpenSettings }: Props) {
+  const { hydrated, progress, recordSolved } = useWordWheelProgress();
+  const { progress: gameProgress } = useGameProgress();
+  const { width: screenWidth } = useWindowDimensions();
+  const successSound = useAudioPlayer(SUCCESS_SOUND);
+  const wrongSound = useAudioPlayer(WRONG_SOUND);
   const paper = gameProgress.settings.themeId === 'paper';
   const [word, setWord] = useState(
-    () => selectNextWord(threeLetterWords, []) ?? threeLetterWords[0],
+    () => selectNextWord(wordBank, [], undefined, 3) ?? wordBank[0],
   );
   const [revealedIndexes, setRevealedIndexes] = useState<number[]>([]);
-  const [guess, setGuess] = useState('');
-  const [status, setStatus] =
-    useState<'playing' | 'revealing' | 'solved'>('playing');
-  const [roundScore, setRoundScore] = useState(BASE_ROUND_SCORE);
-  const [wrongGuessCount, setWrongGuessCount] = useState(0);
-  const [message, setMessage] = useState('Açıklamayı oku ve kelimeyi bul.');
+  const [enteredLetters, setEnteredLetters] = useState<(string | null)[]>([]);
+  const [status, setStatus] = useState<WordRoundStatus>('playing');
+  const [roundScore, setRoundScore] = useState(() =>
+    getBaseRoundScore(getWordLetters(word.answer).length),
+  );
+  const [secondsRemaining, setSecondsRemaining] = useState(
+    SESSION_DURATION_SECONDS,
+  );
+  const [sessionSolved, setSessionSolved] = useState(0);
+  const [sessionFailed, setSessionFailed] = useState(0);
+  const [sessionScore, setSessionScore] = useState(0);
+  const [sessionFinished, setSessionFinished] = useState(false);
+  const [message, setMessage] = useState(
+    'Açıklamayı oku, harfleri sırayla seç.',
+  );
   const shake = useRef(new Animated.Value(0)).current;
   const revealTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const evaluationTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const sessionDeadline = useRef<number | null>(null);
+  const hydratedWord = useRef(false);
 
   const letters = useMemo(() => getWordLetters(word.answer), [word.answer]);
   const maxReveals = getMaxReveals(letters.length);
-  const isBusy = status !== 'playing';
+  const isBusy = status !== 'playing' || sessionFinished;
+  const slotGap = letters.length >= 6 ? 6 : 10;
+  const slotAreaWidth = Math.min(430, Math.max(180, screenWidth - 36));
+  const slotSize = Math.min(
+    78,
+    Math.floor((slotAreaWidth - slotGap * (letters.length - 1)) / letters.length),
+  );
+  const displayedLevel =
+    status === 'solved'
+      ? Math.max(1, progress.totalSolved)
+      : progress.totalSolved + 1;
+  const formattedTime = `${Math.floor(secondsRemaining / 60)}:${String(
+    secondsRemaining % 60,
+  ).padStart(2, '0')}`;
 
   useEffect(() => {
-    const problems = validateWordEntries(threeLetterWords);
+    const problems = validateWordEntries(wordBank);
+    if (wordBank.length !== 500) {
+      problems.unshift(`kelime bankası ${wordBank.length} kayıt içeriyor`);
+    }
     if (problems.length > 0) {
       console.warn('Kelime verisi sorunları:', problems.join(', '));
     }
   }, []);
 
+  useEffect(() => {
+    if (!hydrated || hydratedWord.current) return;
+    hydratedWord.current = true;
+    const targetLength = getWordLengthForLevel(progress.totalSolved + 1);
+    const firstWord =
+      selectNextWord(wordBank, progress.recentWordIds, undefined, targetLength) ??
+      wordBank[0];
+    setWord(firstWord);
+    setEnteredLetters(
+      new Array(getWordLetters(firstWord.answer).length).fill(null),
+    );
+    setRoundScore(getBaseRoundScore(getWordLetters(firstWord.answer).length));
+  }, [hydrated, progress.recentWordIds, progress.totalSolved]);
+
+  useEffect(() => {
+    if (!hydrated || sessionFinished) return;
+
+    if (sessionDeadline.current === null) {
+      sessionDeadline.current = Date.now() + SESSION_DURATION_SECONDS * 1000;
+    }
+
+    const updateTimer = () => {
+      const remaining = Math.max(
+        0,
+        Math.ceil(((sessionDeadline.current ?? Date.now()) - Date.now()) / 1000),
+      );
+      setSecondsRemaining(remaining);
+
+      if (remaining > 0) return;
+
+      if (revealTimer.current) clearTimeout(revealTimer.current);
+      if (evaluationTimer.current) clearTimeout(evaluationTimer.current);
+      revealTimer.current = null;
+      evaluationTimer.current = null;
+      setSessionFinished(true);
+      setStatus('finished');
+      setMessage('');
+    };
+
+    updateTimer();
+    const timer = setInterval(updateTimer, 250);
+    return () => clearInterval(timer);
+  }, [hydrated, sessionFinished]);
+
   useEffect(
     () => () => {
       if (revealTimer.current) clearTimeout(revealTimer.current);
+      if (evaluationTimer.current) clearTimeout(evaluationTimer.current);
     },
     [],
   );
@@ -79,6 +162,19 @@ export function WordWheelScreen({ onBack }: Props) {
       Animated.timing(shake, { duration: 70, toValue: -6, useNativeDriver: true }),
       Animated.timing(shake, { duration: 55, toValue: 0, useNativeDriver: true }),
     ]).start();
+  }
+
+  function playFeedbackSound(player: AudioPlayer) {
+    player
+      .seekTo(0)
+      .then(() => player.play())
+      .catch(() => {
+        try {
+          player.play();
+        } catch {
+          // Ses desteği olmayan ortamlarda oyun akışı kesilmesin.
+        }
+      });
   }
 
   function handleReveal() {
@@ -96,11 +192,14 @@ export function WordWheelScreen({ onBack }: Props) {
       setRevealedIndexes((current) =>
         [...current, nextIndex].sort((first, second) => first - second),
       );
+      setEnteredLetters((current) =>
+        current.map((letter, index) => (index === nextIndex ? null : letter)),
+      );
       setRoundScore((current) =>
         applyPenalty(current, getRevealCost(revealedIndexes.length)),
       );
       setStatus('playing');
-      setMessage(`${nextIndex + 1}. harf açıldı. Şimdi kelimeyi tahmin et!`);
+      setMessage(`${nextIndex + 1}. harf açıldı. Kalan harfleri seç.`);
       if (Platform.OS !== 'web') {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(
           () => undefined,
@@ -110,22 +209,48 @@ export function WordWheelScreen({ onBack }: Props) {
   }
 
   function handleLetter(letter: string) {
-    if (status !== 'playing' || Array.from(guess).length >= letters.length) return;
-    setGuess((current) => current + letter);
-    setMessage('Tahminini tamamlayıp gönder.');
+    if (status !== 'playing') return;
+
+    const nextIndex = enteredLetters.findIndex(
+      (value, index) => !revealedIndexes.includes(index) && value === null,
+    );
+    if (nextIndex < 0) return;
+
+    const nextLetters = Array.from(
+      { length: letters.length },
+      (_, index) => enteredLetters[index] ?? null,
+    );
+    nextLetters[nextIndex] = letter;
+    setEnteredLetters(nextLetters);
+
+    const completedGuess = letters
+      .map((answerLetter, index) =>
+        revealedIndexes.includes(index)
+          ? answerLetter
+          : (nextLetters[index] ?? ''),
+      )
+      .join('');
+
+    if (getWordLetters(completedGuess).length === letters.length) {
+      setStatus('checking');
+      setMessage('Kelime kontrol ediliyor…');
+      evaluationTimer.current = setTimeout(
+        () => evaluateCompletedGuess(completedGuess),
+        LETTER_CHECK_DELAY_MS,
+      );
+    } else {
+      setMessage('Harfler doğrudan üstteki kutulara yerleşiyor.');
+    }
   }
 
-  function handleSubmit() {
-    if (status !== 'playing') return;
-    if (getWordLetters(guess).length !== letters.length) {
-      setMessage(`${letters.length} harfli bir tahmin yazmalısın.`);
-      return;
-    }
-
-    if (isCorrectGuess(guess, word.answer)) {
+  function evaluateCompletedGuess(completedGuess: string) {
+    if (isCorrectGuess(completedGuess, word.answer)) {
       setStatus('solved');
-      setMessage('Harika! Kelimeyi buldun.');
+      setMessage('');
+      setSessionSolved((current) => current + 1);
+      setSessionScore((current) => current + roundScore);
       recordSolved(word.id, roundScore);
+      playFeedbackSound(successSound);
       if (Platform.OS !== 'web') {
         Haptics.notificationAsync(
           Haptics.NotificationFeedbackType.Success,
@@ -134,11 +259,12 @@ export function WordWheelScreen({ onBack }: Props) {
       return;
     }
 
-    setWrongGuessCount((current) => current + 1);
-    setRoundScore((current) => applyPenalty(current, WRONG_GUESS_PENALTY));
-    setGuess('');
-    setMessage('Bu olmadı. Açıklamayı yeniden düşün!');
+    setSessionFailed((current) => current + 1);
+    setRoundScore(0);
+    setStatus('failed');
+    setMessage('');
     runWrongGuessAnimation();
+    playFeedbackSound(wrongSound);
     if (Platform.OS !== 'web') {
       Haptics.notificationAsync(
         Haptics.NotificationFeedbackType.Error,
@@ -147,20 +273,64 @@ export function WordWheelScreen({ onBack }: Props) {
   }
 
   function startNextWord() {
+    if (sessionFinished) return;
+    const nextLevel = progress.totalSolved + 1;
     const nextWord = selectNextWord(
-      threeLetterWords,
+      wordBank,
       [word.id, ...progress.recentWordIds],
       word.id,
+      getWordLengthForLevel(nextLevel),
     );
     if (!nextWord) return;
 
     setWord(nextWord);
     setRevealedIndexes([]);
-    setGuess('');
+    setEnteredLetters(
+      new Array(getWordLetters(nextWord.answer).length).fill(null),
+    );
     setStatus('playing');
-    setRoundScore(BASE_ROUND_SCORE);
-    setWrongGuessCount(0);
-    setMessage('Açıklamayı oku ve kelimeyi bul.');
+    setRoundScore(getBaseRoundScore(getWordLetters(nextWord.answer).length));
+    setMessage('Açıklamayı oku, harfleri sırayla seç.');
+  }
+
+  function restartSession() {
+    const targetLength = getWordLengthForLevel(progress.totalSolved + 1);
+    const nextWord =
+      selectNextWord(
+        wordBank,
+        [word.id, ...progress.recentWordIds],
+        word.id,
+        targetLength,
+      ) ?? wordBank[0];
+
+    sessionDeadline.current = Date.now() + SESSION_DURATION_SECONDS * 1000;
+    setSecondsRemaining(SESSION_DURATION_SECONDS);
+    setSessionSolved(0);
+    setSessionFailed(0);
+    setSessionScore(0);
+    setSessionFinished(false);
+    setWord(nextWord);
+    setRevealedIndexes([]);
+    setEnteredLetters(
+      new Array(getWordLetters(nextWord.answer).length).fill(null),
+    );
+    setStatus('playing');
+    setRoundScore(getBaseRoundScore(getWordLetters(nextWord.answer).length));
+    setMessage('Yeni 2 dakikalık tur başladı.');
+  }
+
+  function handleBackspace() {
+    if (status !== 'playing') return;
+    setEnteredLetters((current) => {
+      const next = [...current];
+      for (let index = next.length - 1; index >= 0; index -= 1) {
+        if (!revealedIndexes.includes(index) && next[index]) {
+          next[index] = null;
+          break;
+        }
+      }
+      return next;
+    });
   }
 
   const screen = (
@@ -171,25 +341,19 @@ export function WordWheelScreen({ onBack }: Props) {
       ]}
     >
       <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.header}>
-          <Pressable
-            accessibilityLabel="Kelime Çarkından çık"
-            accessibilityRole="button"
-            onPress={onBack}
-            style={[
-              styles.headerButton,
-              paper ? styles.headerButtonPaper : styles.headerButtonGlass,
-            ]}
-          >
-            <Text style={[styles.backText, paper ? styles.textPaper : styles.textGlass]}>
-              ‹
-            </Text>
-          </Pressable>
+        <MainModeSwitch
+          activeMode="turkish"
+          onSelectMath={onBack}
+          onSelectTurkish={() => undefined}
+          paper={paper}
+        />
 
+        <View style={styles.header}>
           <View style={styles.headerTitleWrap}>
             <Text
               style={[
@@ -205,11 +369,9 @@ export function WordWheelScreen({ onBack }: Props) {
           </View>
 
           <Pressable
-            accessibilityLabel={paper ? 'Cam temasına geç' : 'Kâğıt temasına geç'}
+            accessibilityLabel="Genel ayarları aç"
             accessibilityRole="button"
-            onPress={() =>
-              updateSettings({ themeId: paper ? 'nature' : 'paper' })
-            }
+            onPress={onOpenSettings}
             style={[
               styles.themeButton,
               paper ? styles.headerButtonPaper : styles.headerButtonGlass,
@@ -221,14 +383,20 @@ export function WordWheelScreen({ onBack }: Props) {
                 paper ? styles.textPaper : styles.textGlass,
               ]}
             >
-              {paper ? 'CAM' : 'KÂĞIT'}
+              ⚙
             </Text>
           </Pressable>
         </View>
 
         <View style={styles.scoreRow}>
           <ScorePill label="TUR PUANI" paper={paper} value={roundScore} />
-          <ScorePill label="ÇÖZÜLEN" paper={paper} value={progress.totalSolved} />
+          <ScorePill
+            emphasized
+            label="SÜRE"
+            paper={paper}
+            value={formattedTime}
+          />
+          <ScorePill label="SEVİYE" paper={paper} value={displayedLevel} />
         </View>
 
         <View style={[styles.clueCard, paper ? styles.cardPaper : styles.cardGlass]}>
@@ -246,18 +414,29 @@ export function WordWheelScreen({ onBack }: Props) {
         </View>
 
         <Animated.View
-          style={[styles.slots, { transform: [{ translateX: shake }] }]}
+          style={[
+            styles.slots,
+            { gap: slotGap, transform: [{ translateX: shake }] },
+          ]}
         >
           {letters.map((letter, index) => (
             <LetterSlot
               index={index}
               key={`${word.id}-${index}`}
-              paper={paper}
-              revealedLetter={
-                revealedIndexes.includes(index) || status === 'solved'
+              letter={
+                status === 'solved' ||
+                status === 'failed' ||
+                revealedIndexes.includes(index)
                   ? letter
-                  : null
+                  : (enteredLetters[index] ?? null)
               }
+              paper={paper}
+              revealed={
+                revealedIndexes.includes(index) ||
+                status === 'solved' ||
+                status === 'failed'
+              }
+              size={slotSize}
               spinning={
                 status === 'revealing' && !revealedIndexes.includes(index)
               }
@@ -271,33 +450,95 @@ export function WordWheelScreen({ onBack }: Props) {
             paper ? styles.mutedPaper : styles.mutedGlass,
           ]}
         >
-          Harf hakkı: {Math.max(0, maxReveals - revealedIndexes.length)} · Yanlış
-          tahmin: {wrongGuessCount}
+          Harf hakkı: {Math.max(0, maxReveals - revealedIndexes.length)} · Her
+          harf 100 puan
         </Text>
 
-        {status === 'solved' ? (
+        <Text
+          style={[
+            styles.sessionStats,
+            paper ? styles.mutedPaper : styles.mutedGlass,
+          ]}
+        >
+          Bu tur: {sessionSolved} doğru · {sessionFailed} yanlış · {sessionScore}{' '}
+          puan
+        </Text>
+
+        {sessionFinished ? (
           <View
             style={[
-              styles.successCard,
-              paper ? styles.successPaper : styles.successGlass,
+              styles.sessionEndCard,
+              paper ? styles.sessionEndPaper : styles.sessionEndGlass,
             ]}
           >
             <Text
               style={[
-                styles.successTitle,
+                styles.sessionEndTitle,
                 paper ? styles.textPaper : styles.textGlass,
               ]}
             >
-              Bildin: {word.answer}
+              SÜRE DOLDU
             </Text>
             <Text
               style={[
-                styles.successText,
+                styles.sessionEndScore,
+                paper ? styles.accentPaper : styles.accentGlass,
+              ]}
+            >
+              {sessionScore} PUAN
+            </Text>
+            <Text
+              style={[
+                styles.sessionEndSummary,
                 paper ? styles.mutedPaper : styles.mutedGlass,
               ]}
             >
-              Bu turdan {roundScore} puan kazandın.
+              {sessionSolved} doğru · {sessionFailed} yanlış
             </Text>
+            <PrimaryButton
+              label="YENİ 2 DAKİKALIK TUR"
+              onPress={restartSession}
+            />
+          </View>
+        ) : status === 'solved' || status === 'failed' ? (
+          <View
+            style={[
+              styles.successCard,
+              status === 'solved'
+                ? paper
+                  ? styles.successPaper
+                  : styles.successGlass
+                : paper
+                  ? styles.failurePaper
+                  : styles.failureGlass,
+            ]}
+          >
+            <Text
+              style={[
+                styles.successText,
+                status === 'solved'
+                  ? paper
+                    ? styles.successTextPaper
+                    : styles.textGlass
+                  : paper
+                    ? styles.failureTextPaper
+                    : styles.textGlass,
+              ]}
+            >
+              {status === 'solved'
+                ? `Bu kelimeden ${roundScore} puan kazandın.`
+                : `Doğru cevap: ${word.answer}`}
+            </Text>
+            {status === 'failed' ? (
+              <Text
+                style={[
+                  styles.failureHint,
+                  paper ? styles.mutedPaper : styles.mutedGlass,
+                ]}
+              >
+                Her kelime için yalnızca bir tahmin hakkın var.
+              </Text>
+            ) : null}
             <PrimaryButton label="SONRAKİ KELİME" onPress={startNextWord} />
           </View>
         ) : (
@@ -306,15 +547,14 @@ export function WordWheelScreen({ onBack }: Props) {
               accessibilityHint="Rastgele bir doğru harfi kendi yerinde gösterir"
               accessibilityRole="button"
               disabled={
-                status === 'revealing' || revealedIndexes.length >= maxReveals
+                isBusy || revealedIndexes.length >= maxReveals
               }
               onPress={handleReveal}
               style={({ pressed }) => [
                 styles.revealButton,
                 paper ? styles.revealButtonPaper : styles.revealButtonGlass,
                 pressed && styles.pressed,
-                (status === 'revealing' ||
-                  revealedIndexes.length >= maxReveals) &&
+                (isBusy || revealedIndexes.length >= maxReveals) &&
                   styles.disabled,
               ]}
             >
@@ -332,42 +572,11 @@ export function WordWheelScreen({ onBack }: Props) {
               </Text>
             </Pressable>
 
-            <View
-              style={[
-                styles.guessBox,
-                paper ? styles.guessPaper : styles.guessGlass,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.guessLabel,
-                  paper ? styles.mutedPaper : styles.mutedGlass,
-                ]}
-              >
-                TAHMİNİN
-              </Text>
-              <Text
-                style={[
-                  styles.guessText,
-                  paper ? styles.textPaper : styles.textGlass,
-                ]}
-              >
-                {guess.padEnd(letters.length, '•').split('').join('  ')}
-              </Text>
-            </View>
-
             <TurkishKeyboard
               disabled={isBusy}
-              onBackspace={() =>
-                setGuess((current) => Array.from(current).slice(0, -1).join(''))
-              }
+              onBackspace={handleBackspace}
               onLetter={handleLetter}
               paper={paper}
-            />
-            <PrimaryButton
-              disabled={isBusy}
-              label="TAHMİN ET"
-              onPress={handleSubmit}
             />
           </>
         )}
@@ -396,24 +605,53 @@ export function WordWheelScreen({ onBack }: Props) {
 }
 
 type ScorePillProps = {
+  emphasized?: boolean;
   label: string;
   paper: boolean;
-  value: number;
+  value: number | string;
 };
 
-function ScorePill({ label, paper, value }: ScorePillProps) {
+function ScorePill({ emphasized = false, label, paper, value }: ScorePillProps) {
+  const formattedValue =
+    typeof value === 'number' ? value.toLocaleString('tr-TR') : value;
+
   return (
-    <View style={[styles.scorePill, paper ? styles.pillPaper : styles.pillGlass]}>
+    <View
+      accessibilityLabel={`${label.toLocaleLowerCase('tr-TR')} ${formattedValue}`}
+      style={[
+        styles.scorePill,
+        paper ? styles.pillPaper : styles.pillGlass,
+        emphasized && (paper ? styles.pillEmphasizedPaper : styles.pillEmphasizedGlass),
+      ]}
+    >
       <Text
         style={[
           styles.scoreLabel,
-          paper ? styles.mutedPaper : styles.mutedGlass,
+          emphasized
+            ? paper
+              ? styles.scoreLabelEmphasizedPaper
+              : styles.scoreLabelEmphasizedGlass
+            : paper
+              ? styles.mutedPaper
+              : styles.mutedGlass,
         ]}
       >
         {label}
       </Text>
-      <Text style={[styles.scoreValue, paper ? styles.textPaper : styles.textGlass]}>
-        {value}
+      <Text
+        selectable
+        style={[
+          styles.scoreValue,
+          emphasized
+            ? paper
+              ? styles.scoreValueEmphasizedPaper
+              : styles.scoreValueEmphasizedGlass
+            : paper
+              ? styles.textPaper
+              : styles.textGlass,
+        ]}
+      >
+        {formattedValue}
       </Text>
     </View>
   );
@@ -467,14 +705,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-  },
-  headerButton: {
-    width: 42,
-    height: 42,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 14,
-    borderWidth: 1,
+    marginTop: 14,
   },
   headerButtonPaper: {
     borderColor: '#DED5CC',
@@ -484,20 +715,18 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255,255,255,0.24)',
     backgroundColor: 'rgba(13,34,21,0.62)',
   },
-  backText: { marginTop: -4, fontSize: 32, fontWeight: '500' },
-  headerTitleWrap: { flex: 1, alignItems: 'center' },
+  headerTitleWrap: { flex: 1, alignItems: 'flex-start' },
   eyebrow: { fontSize: 9, fontWeight: '900', letterSpacing: 1.3 },
   title: { marginTop: 2, fontSize: 24, fontWeight: '900' },
   themeButton: {
-    minWidth: 58,
+    width: 42,
     height: 42,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 14,
     borderWidth: 1,
-    paddingHorizontal: 7,
   },
-  themeButtonText: { fontSize: 9, fontWeight: '900', letterSpacing: 0.5 },
+  themeButtonText: { fontSize: 22, fontWeight: '700' },
   scoreRow: {
     width: '100%',
     maxWidth: 430,
@@ -518,8 +747,27 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255,255,255,0.18)',
     backgroundColor: 'rgba(13,34,21,0.55)',
   },
+  pillEmphasizedPaper: {
+    borderColor: '#D8A04F',
+    backgroundColor: '#FFF0D2',
+    boxShadow: '0 5px 12px rgba(166, 104, 31, 0.14)',
+  },
+  pillEmphasizedGlass: {
+    borderColor: 'rgba(255, 209, 102, 0.58)',
+    backgroundColor: 'rgba(70, 46, 12, 0.66)',
+    boxShadow: '0 5px 14px rgba(255, 191, 63, 0.18)',
+  },
   scoreLabel: { fontSize: 8, fontWeight: '900', letterSpacing: 1.1 },
-  scoreValue: { marginTop: 2, fontSize: 20, fontWeight: '900' },
+  scoreLabelEmphasizedPaper: { color: '#9A631E' },
+  scoreLabelEmphasizedGlass: { color: '#FFE7AA' },
+  scoreValue: {
+    marginTop: 2,
+    fontSize: 20,
+    fontWeight: '900',
+    fontVariant: ['tabular-nums'],
+  },
+  scoreValueEmphasizedPaper: { color: '#A5681F' },
+  scoreValueEmphasizedGlass: { color: '#FFFFFF' },
   clueCard: {
     width: '100%',
     maxWidth: 430,
@@ -548,9 +796,9 @@ const styles = StyleSheet.create({
     marginTop: 22,
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 12,
   },
   revealInfo: { marginTop: 13, fontSize: 12, fontWeight: '700' },
+  sessionStats: { marginTop: 5, fontSize: 11, fontWeight: '700' },
   revealButton: {
     width: '100%',
     maxWidth: 300,
@@ -570,28 +818,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(82,107,57,0.78)',
   },
   revealButtonText: { fontSize: 13, fontWeight: '900', letterSpacing: 0.8 },
-  guessBox: {
-    width: '100%',
-    maxWidth: 300,
-    minHeight: 68,
-    marginTop: 13,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 16,
-    borderWidth: 1,
-  },
-  guessPaper: { borderColor: '#E3DAD1', backgroundColor: '#FFFEFC' },
-  guessGlass: {
-    borderColor: 'rgba(255,255,255,0.2)',
-    backgroundColor: 'rgba(8,24,14,0.48)',
-  },
-  guessLabel: { fontSize: 8, fontWeight: '900', letterSpacing: 1.1 },
-  guessText: {
-    marginTop: 5,
-    fontSize: 24,
-    fontWeight: '900',
-    letterSpacing: 3,
-  },
   primaryButton: {
     width: '100%',
     maxWidth: 430,
@@ -600,7 +826,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 16,
-    backgroundColor: '#71543F',
+    backgroundColor: '#4F7948',
   },
   primaryButtonText: {
     color: '#FFFFFF',
@@ -617,13 +843,42 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     borderWidth: 1,
   },
-  successPaper: { borderColor: '#CDBCA9', backgroundColor: '#F3E7D7' },
+  successPaper: { borderColor: '#9DB58C', backgroundColor: '#E8F2DF' },
   successGlass: {
-    borderColor: 'rgba(203,234,155,0.5)',
-    backgroundColor: 'rgba(60,91,44,0.75)',
+    borderColor: 'rgba(203,234,155,0.72)',
+    backgroundColor: 'rgba(50,102,53,0.86)',
   },
-  successTitle: { fontSize: 23, fontWeight: '900' },
-  successText: { marginTop: 6, fontSize: 13, fontWeight: '700' },
+  successText: { fontSize: 16, fontWeight: '800' },
+  successTextPaper: { color: '#3F6F3B' },
+  failurePaper: { borderColor: '#D4A09A', backgroundColor: '#F9E8E5' },
+  failureGlass: {
+    borderColor: 'rgba(255,177,166,0.68)',
+    backgroundColor: 'rgba(112,45,40,0.84)',
+  },
+  failureTextPaper: { color: '#8C3F38' },
+  failureHint: {
+    marginTop: 7,
+    textAlign: 'center',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  sessionEndCard: {
+    width: '100%',
+    maxWidth: 430,
+    marginTop: 18,
+    alignItems: 'center',
+    padding: 22,
+    borderRadius: 22,
+    borderWidth: 1,
+  },
+  sessionEndPaper: { borderColor: '#D8A04F', backgroundColor: '#FFF0D2' },
+  sessionEndGlass: {
+    borderColor: 'rgba(255,209,102,0.58)',
+    backgroundColor: 'rgba(70,46,12,0.82)',
+  },
+  sessionEndTitle: { fontSize: 14, fontWeight: '900', letterSpacing: 1.1 },
+  sessionEndScore: { marginTop: 8, fontSize: 30, fontWeight: '900' },
+  sessionEndSummary: { marginTop: 4, fontSize: 13, fontWeight: '700' },
   message: {
     marginTop: 13,
     minHeight: 20,

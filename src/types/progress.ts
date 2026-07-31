@@ -25,7 +25,9 @@ export type GameSettings = {
 };
 
 export type GameProgress = {
-  schemaVersion: 1;
+  schemaVersion: 2;
+  playerId: string;
+  playerName?: string;
   completedLevelNumbers: number[];
   levelRecords: Record<number, LevelRecord>;
   lastLevelNumber: number;

@@ -87,6 +87,10 @@ export function NumberCell(props: Props) {
     typeof visibleValue === 'string'
       ? visibleValue
       : formatMathValue(visibleValue);
+  const valueFontSize = Math.min(
+    34,
+    Math.max(28, Math.round(size * 0.32)),
+  );
 
   useEffect(() => {
     if (!merge) {
@@ -192,6 +196,7 @@ export function NumberCell(props: Props) {
           accessible={false}
           style={[
             paper ? styles.valuePaper : styles.value,
+            { fontSize: valueFontSize },
             selected && (paper ? styles.selectedTextPaper : styles.selectedText),
             pending && (paper ? styles.pendingTextPaper : styles.pendingText),
             activeResult &&

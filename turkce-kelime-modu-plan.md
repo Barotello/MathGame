@@ -29,20 +29,21 @@ Cevap: `ARI`
 Ana tur akışı:
 
 1. Oyuncuya açıklama ve kapalı harf kutuları gösterilir.
-2. Oyuncu isterse doğrudan kelime tahmini yapar.
+2. Oyuncu oyun içi Türkçe klavyeden harfleri sırayla seçer; seçilen harfler doğrudan kutulara yerleşir.
 3. Oyuncu **Harf Aç** düğmesine basarsa kapalı kutular yaklaşık 700–900 ms döner.
 4. Henüz açılmamış konumlardan biri rastgele seçilir ve doğru harf kendi yerinde kilitlenir.
 5. Diğer kapalı kutular tekrar `?` durumuna döner.
-6. Oyuncu ekrandaki Türkçe klavyeyle cevabı girip **Tahmin Et** düğmesine basar.
-7. Doğru tahminde başarı animasyonu gösterilir ve sıradaki kelimeye geçilir.
-8. Yanlış tahminde kutular kısa bir sarsılma animasyonu yapar; tur bitmez.
+6. Son kutu dolduğunda cevap ayrı bir düğmeye gerek kalmadan otomatik kontrol edilir.
+7. Doğru tahminde başarı animasyonu gösterilir ve oyuncu **Sonraki Kelime** düğmesiyle devam eder.
+8. Yanlış tahminde kutular kısa bir sarsılma animasyonu yapar, doğru cevap gösterilir ve o kelime kapanır. Aynı kelime için ikinci veya üçüncü tahmin hakkı verilmez.
+9. Kelime oturumu 2 dakika sürer. Süre dolduğunda yeni kelime akışı durur ve tur özeti gösterilir.
 
 Terminoloji kararı:
 
 - Sistemin doğru harfi göstermesini sağlayan düğme: **Harf Aç**
-- Oyuncunun cevabı göndermesini sağlayan düğme: **Tahmin Et**
+- Oyuncunun cevabı, son harf kutusu dolduğunda otomatik gönderilir.
 
-Bu iki eylemi aynı isimle sunmak kullanıcıyı yanıltacağı için ayrı tutulmalıdır.
+Bu nedenle arayüzde ayrıca **Tahmin Et** düğmesi veya ayrı tahmin kutusu bulunmaz.
 
 ## 3. İlk sürüm oyun kuralları
 
@@ -51,11 +52,12 @@ Bu iki eylemi aynı isimle sunmak kullanıcıyı yanıltacağı için ayrı tutu
 - İlk içerik paketi yalnızca 3 harfli kelimelerden oluşur.
 - Her turda tek bir açıklama ve tek doğru cevap vardır.
 - Üç harfli bir kelimede en fazla **2 harf açılabilir**.
-- İlk harf açma 50, ikinci harf açma 100 puan düşürür.
-- Doğru cevap temel olarak 300 puan verir.
-- Yanlış tam kelime tahmini 25 puan düşürür; puan sıfırın altına inmez.
-- Zaman sınırı MVP'de kullanılmaz. Önce oyunun anlaşılır ve eğlenceli olup olmadığı test edilir.
+- Açılan her harf 100 puan düşürür.
+- Kelimenin başlangıç puanı harf sayısına göre hesaplanır: her harf 100 puandır. Örneğin 3 harfli kelime 300, 4 harfli kelime 400 ve 5 harfli kelime 500 puan verir.
+- Her kelime için yalnızca bir tam tahmin hakkı vardır. Yanlış cevapta kelime kapanır, doğru cevap gösterilir ve o kelimeden puan kazanılmaz.
+- Her oyun oturumu 120 saniye sürer. Süre dolduğunda girişler kilitlenir ve doğru, yanlış ve tur puanı özeti gösterilir.
 - Doğru cevaptan sonra oyuncu **Sonraki Kelime** düğmesine basar.
+- Yanlış cevaptan sonra oyuncu da **Sonraki Kelime** düğmesiyle süre devam ederken yeni kelimeye geçer.
 - Tüm harfleri otomatik açan bir özellik bulunmaz; son adımda oyuncunun tahmin yapması gerekir.
 
 Puanlar ilk kullanıcı testinden sonra değiştirilebilir; kod içinde dağınık sabitler yerine tek bir kural nesnesinde tutulmalıdır.
@@ -89,10 +91,10 @@ Ekran yukarıdan aşağıya şu bölümlerden oluşur:
 4. Harf kutuları
 5. Kalan harf açma hakkı
 6. **Harf Aç** düğmesi
-7. Oyuncunun girdiği tahmin satırı
-8. Türkçe ekran klavyesi
-9. **Sil** ve **Tahmin Et** kontrolleri
-10. Başarı/yanlış cevap geri bildirimi
+7. Türkçe ekran klavyesi
+8. **Sil** kontrolü
+9. Başarı/yanlış cevap geri bildirimi
+10. Kalan süre ile oturumdaki doğru, yanlış ve puan özeti
 
 Türkçe klavye şu harfleri doğrudan desteklemelidir:
 
@@ -116,7 +118,7 @@ Harf açma animasyonu:
 
 Kurallar:
 
-- Animasyon sürerken ikinci kez **Harf Aç** veya **Tahmin Et** çalışmaz.
+- Animasyon veya otomatik cevap kontrolü sürerken ikinci bir giriş çalışmaz.
 - Açılmış harfler sonraki dönüşlerde sabit kalır.
 - “Hareketi azalt” seçeneği eklenirse dönme yerine kısa solma geçişi kullanılır.
 - Animasyon yalnızca görseldir; açılacak konum animasyon başlamadan oyun motoru tarafından belirlenir.
@@ -139,9 +141,17 @@ type WordRoundState = {
   wordId: string;
   revealedIndexes: number[];
   guess: string;
-  wrongGuessCount: number;
+  attempted: boolean;
   roundScore: number;
-  status: 'playing' | 'revealing' | 'solved';
+  status: 'playing' | 'revealing' | 'checking' | 'solved' | 'failed' | 'finished';
+};
+
+type WordSessionState = {
+  durationSeconds: 120;
+  secondsRemaining: number;
+  solvedCount: number;
+  failedCount: number;
+  score: number;
 };
 ```
 
@@ -247,6 +257,7 @@ Kelime listesi koddan bağımsız bir dizi olarak tutulacağı için daha sonra 
 - Türkçe büyük/küçük harf normalleştirmesini yaz.
 - Harf açılacak konumu seçen saf fonksiyonu yaz.
 - Tahmin doğrulama ve puanlama fonksiyonlarını yaz.
+- 100 puanlık sabit harf açma maliyetini ve 120 saniyelik oturum kuralını tek bir kural modülünde tut.
 - 10 örnek kelimeyle veri doğrulama kontrolü kur.
 
 Çıkış ölçütü: `ARI`, `DİŞ`, `GÖL` ve `KUŞ` gibi Türkçe karakterli cevaplar doğru karşılaştırılmalı; açılmış bir konum ikinci kez seçilmemelidir.
@@ -254,8 +265,10 @@ Kelime listesi koddan bağımsız bir dizi olarak tutulacağı için daha sonra 
 ### Aşama 2 — İlk oynanabilir ekran
 
 - Açıklama kartı, üç kutu ve oyun içi klavyeyi oluştur.
-- Harf girişi, silme ve tahmin gönderme akışını bağla.
+- Harf girişi, silme ve son kutuda otomatik tahmin gönderme akışını bağla.
 - Doğru/yanlış durumlarını göster.
+- Yanlış cevapta kelimeyi kapatıp doğru cevabı göster; aynı kelimede tekrar tahmine izin verme.
+- 2 dakikalık geri sayım ve süre sonu özetini ekle.
 - Harf açma animasyonunu ekle.
 - Geri çıkış ve yeni kelime geçişini ekle.
 
@@ -305,6 +318,9 @@ Kelime listesi koddan bağımsız bir dizi olarak tutulacağı için daha sonra 
 - Açılmış harf tekrar açılmaz.
 - Animasyon sırasında düğmeler ikinci işlem başlatmaz.
 - Eksik uzunlukta tahmin gönderilemez.
+- Son harf tamamlandığında tahmin yalnızca bir kez otomatik gönderilir.
+- Yanlış tahminden sonra aynı kelime yeniden düzenlenemez veya tekrar gönderilemez.
+- Sayaç 2:00'dan 0:00'a iner; süre dolunca klavye ve harf açma işlemleri kilitlenir.
 - Doğru kelime yalnızca boşluk ve harf büyüklüğü farkıyla yanlış sayılmaz.
 - Yanlış cevap puanı sıfırın altına indirmez.
 - Son kelimeler hemen tekrar seçilmez.
@@ -319,22 +335,26 @@ Kelime listesi koddan bağımsız bir dizi olarak tutulacağı için daha sonra 
 - Üç harfli cevap için üç ayrı kutu oluşturulur.
 - Harf Aç eyleminde kapalı kutular döner ve yalnızca bir doğru harf yerinde açılır.
 - Oyuncu ekrandaki Türkçe klavyeyle üç harfli tahmin girebilir.
+- Son harf girildiğinde cevap otomatik kontrol edilir.
 - Doğru ve yanlış tahmin açık biçimde ayrılır.
+- Yanlış tahminde doğru cevap gösterilir ve aynı kelime için yeni hak verilmez.
 - Doğru cevap puanlanır ve sonraki kelimeye geçilir.
+- Her harf açma işlemi 100 puan düşürür.
+- Oyun 2 dakikalık oturum sonunda durur ve tur özeti gösterir.
 - Üç harfli kelimede üçüncü harf otomatik açılmaz.
 - En az 40 doğrulanmış kelime bulunur.
 - İlerleme diğer oyun modlarından ayrı kaydedilir.
 - Yeni paket eklenerek kutu sayısı kod mimarisini değiştirmeden artırılabilir.
 
-## 14. Uygulamadan önce kapatılacak küçük ürün kararları
+## 14. Kesinleşen ürün kararları
 
-İlk prototip yukarıdaki önerilen ayarlarla yapılabilir. Kullanıcı testinden önce şu kararlar kesinleştirilmelidir:
-
-1. Harf açmak yalnızca puan mı düşürecek, yoksa tur başına jeton mu kullanacak?
-2. Oyuncu yanlış tahminde sınırsız devam mı edecek, üç can sistemi mi olacak?
-3. Doğru cevaptan sonra otomatik geçiş mi, “Sonraki Kelime” düğmesi mi kullanılacak? Öneri: düğme.
-4. Kelime kategorisi açıklamanın üstünde gösterilecek mi? Öneri: ilk sürümde evet.
-5. Modun kesin adı “Kelime Çarkı” mı olacak?
+1. Harf açmak jeton kullanmaz; açılan her harf mevcut kelime puanından 100 puan düşürür.
+2. Üç can sistemi veya sınırsız tekrar yoktur. Her kelime için tek tam tahmin hakkı vardır.
+3. Son harf girildiğinde cevap otomatik kontrol edilir; ayrı tahmin kutusu ve **Tahmin Et** düğmesi yoktur.
+4. Doğru veya yanlış sonuçtan sonra sıradaki kelimeye **Sonraki Kelime** düğmesiyle geçilir.
+5. Her oturum 2 dakika sürer; süre dolunca tur özeti gösterilir.
+6. Kelime kategorisi açıklamanın üstünde gösterilir.
+7. Modun adı **Kelime Çarkı**dır.
 
 ## 15. Önerilen ilk geliştirme görevi
 

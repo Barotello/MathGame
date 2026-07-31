@@ -62,18 +62,19 @@ export function TurkishKeyboard({ disabled, onBackspace, onLetter, paper }: Prop
 const styles = StyleSheet.create({
   keyboard: {
     width: '100%',
-    maxWidth: 430,
-    gap: 6,
+    maxWidth: 520,
+    marginTop: 14,
+    gap: 8,
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 4,
+    gap: 3,
   },
   key: {
     flex: 1,
-    maxWidth: 38,
-    minHeight: 39,
+    maxWidth: 48,
+    minHeight: 52,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 9,
@@ -92,7 +93,7 @@ const styles = StyleSheet.create({
     transform: [{ scale: 0.94 }],
   },
   keyText: {
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: '900',
   },
   textPaper: {
@@ -102,7 +103,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   deleteKey: {
-    minHeight: 38,
+    minHeight: 48,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 11,
@@ -117,7 +118,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(9,24,15,0.45)',
   },
   deleteText: {
-    fontSize: 11,
+    fontSize: 13,
     fontWeight: '900',
     letterSpacing: 0.7,
   },

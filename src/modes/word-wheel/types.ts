@@ -17,7 +17,13 @@ export type WordEntry = {
   enabled: boolean;
 };
 
-export type WordRoundStatus = 'playing' | 'revealing' | 'solved';
+export type WordRoundStatus =
+  | 'playing'
+  | 'revealing'
+  | 'checking'
+  | 'solved'
+  | 'failed'
+  | 'finished';
 
 export type WordWheelProgress = {
   schemaVersion: 1;

@@ -149,6 +149,7 @@ const styles = StyleSheet.create({
   wrapper: {
     width: '100%',
     maxWidth: 370,
+    marginTop: 16,
   },
   card: {
     overflow: 'hidden',

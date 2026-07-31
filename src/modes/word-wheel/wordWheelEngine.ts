@@ -1,7 +1,12 @@
 import type { WordEntry } from './types';
 
-export const BASE_ROUND_SCORE = 300;
-export const WRONG_GUESS_PENALTY = 25;
+export const SCORE_PER_LETTER = 100;
+export const REVEAL_COST = 100;
+export const SESSION_DURATION_SECONDS = 120;
+
+export function getBaseRoundScore(wordLength: number) {
+  return Math.max(0, Math.floor(wordLength)) * SCORE_PER_LETTER;
+}
 
 export function normalizeTurkishWord(value: string) {
   return value.trim().toLocaleUpperCase('tr-TR');
@@ -22,8 +27,8 @@ export function getMaxReveals(wordLength: number) {
   return 4;
 }
 
-export function getRevealCost(revealedCount: number) {
-  return revealedCount === 0 ? 50 : 100;
+export function getRevealCost(_revealedCount: number) {
+  return REVEAL_COST;
 }
 
 export function revealRandomIndex(
@@ -45,6 +50,7 @@ export function applyPenalty(score: number, penalty: number) {
 
 export function validateWordEntries(entries: WordEntry[]) {
   const ids = new Set<string>();
+  const answers = new Set<string>();
 
   return entries.flatMap((entry) => {
     const problems: string[] = [];
@@ -52,6 +58,9 @@ export function validateWordEntries(entries: WordEntry[]) {
 
     if (ids.has(entry.id)) problems.push(`${entry.id}: yinelenen kimlik`);
     ids.add(entry.id);
+
+    if (answers.has(answer)) problems.push(`${entry.id}: yinelenen cevap`);
+    answers.add(answer);
 
     if (getWordLetters(answer).length < 3) problems.push(`${entry.id}: cevap çok kısa`);
     if (!/^[ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ]+$/u.test(answer)) {

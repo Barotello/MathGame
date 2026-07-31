@@ -2,11 +2,14 @@ import { BlurView } from 'expo-blur';
 import * as Haptics from 'expo-haptics';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
+  Animated,
+  Easing,
   Image,
   ImageBackground,
   Modal,
   Platform,
   Pressable,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -16,6 +19,8 @@ import {
 
 import { NumberCell } from '../components/NumberCell';
 import { OperatorPopover } from '../components/OperatorPopover';
+import { PlayerNameModal } from '../components/player-name-modal';
+import { MainModeSwitch } from '../components/main-mode-switch';
 import { SettingsModal } from '../components/SettingsModal';
 import { StagedHint } from '../components/StagedHint';
 import { SuccessCard } from '../components/SuccessCard';
@@ -25,7 +30,6 @@ import { GestureTutorialOverlay } from '../components/GestureTutorialOverlay';
 import { MathValueLabel } from '../components/math-value-label';
 import { generateDailyChallenge, getTodayDateString } from '../game/dailyChallenge';
 import { levels } from '../data/levels';
-import { getDifficultyProfile } from '../game/difficulty';
 import {
   areOrthogonalNeighbors,
   calculate,
@@ -89,15 +93,17 @@ type MergeAnimation = {
 };
 
 type Props = {
+  openSettingsInitially?: boolean;
   onOpenWallBreaker: () => void;
   onOpenWordWheel: () => void;
 };
 
 export function GameScreen({
+  openSettingsInitially = false,
   onOpenWallBreaker,
   onOpenWordWheel,
 }: Props) {
-  const { width } = useWindowDimensions();
+  const { height, width } = useWindowDimensions();
   const [levelIndex, setLevelIndex] = useState(0);
   const [isDailyMode, setIsDailyMode] = useState(false);
   const [dailyModalOpen, setDailyModalOpen] = useState(false);
@@ -116,18 +122,24 @@ export function GameScreen({
   const [currentValue, setCurrentValue] = useState<MathValue | null>(null);
   const [steps, setSteps] = useState<OperationStep[]>([]);
   const [pendingCell, setPendingCell] = useState<NumberCellModel | null>(null);
-  const [message, setMessage] = useState('Hedefe ulaşmak için ilk sayıyı seç.');
+  const [, setMessage] = useState('Hedefe ulaşmak için ilk sayıyı seç.');
   const [won, setWon] = useState(false);
   const [lost, setLost] = useState(false);
   const [failureReason, setFailureReason] = useState<'constraint' | 'dead-end' | 'timeout' | null>(null);
   const [secondsRemaining, setSecondsRemaining] = useState(levels[0].timeLimitSeconds);
   const [activeOperator, setActiveOperator] = useState<Operator | null>(null);
-  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(openSettingsInitially);
   const [showPythagorasInterlude, setShowPythagorasInterlude] = useState(false);
   const [hintStage, setHintStage] = useState(0);
   const [usedHint, setUsedHint] = useState(false);
   const [completionSummary, setCompletionSummary] =
     useState<CompletionSummary | null>(null);
+  const [displayedTotalScore, setDisplayedTotalScore] = useState(0);
+  const [scoreFlight, setScoreFlight] = useState<{
+    addedScore: number;
+    earnedScore: number;
+    nextTotal: number;
+  } | null>(null);
   const [autoAdvanceRemainingMs, setAutoAdvanceRemainingMs] = useState<number | null>(null);
   const [autoAdvancePaused, setAutoAdvancePaused] = useState(false);
   const [pointerPosition, setPointerPosition] = useState<BoardPoint | null>(null);
@@ -135,15 +147,26 @@ export function GameScreen({
   const dragSession = useRef<DragSession | null>(null);
   const mergeSequence = useRef(0);
   const restoredProgress = useRef(false);
+  const scoreFlightProgress = useRef(new Animated.Value(0)).current;
+  const scorePillPulse = useRef(new Animated.Value(0)).current;
+  const scoreFlightAnimation = useRef<Animated.CompositeAnimation | null>(null);
   const {
     hydrated,
     progress,
     recordCompletion,
     recordDailyCompletion,
     setLastLevelNumber,
+    setPlayerName,
     updateSettings,
   } = useGameProgress();
-  const { completedLevelNumbers, dailyStreak, lastDailyCompletedDate, levelRecords, settings } = progress;
+  const {
+    completedLevelNumbers,
+    dailyStreak,
+    lastDailyCompletedDate,
+    levelRecords,
+    playerName,
+    settings,
+  } = progress;
   const { showHints, themeId } = settings;
   const autoAdvance = true;
   const isPaperTheme = themeId === 'paper';
@@ -244,24 +267,88 @@ export function GameScreen({
     return rules;
   }, [level, path.length, selectedCells, steps]);
   const lastCell = path.length > 0 ? cellMap.get(path[path.length - 1]) : null;
-  const difficulty = useMemo(() => getDifficultyProfile(level), [level]);
-  const mechanicLabel =
-    level.number <= 5
-      ? 'Toplama ve çıkarma'
-      : level.number <= 10
-        ? 'Çarpma ve bölme'
-        : level.number <= 15
-          ? 'Negatif sayılar'
-          : level.number <= 20
-            ? 'Kesirler'
-            : level.number <= 25
-              ? 'Üsler ve kökler'
-              : 'Karma ustalık';
+  const totalScore = useMemo(
+    () =>
+      Object.values(levelRecords).reduce(
+        (sum, record) => sum + (record.bestScore ?? 0),
+        0,
+      ),
+    [levelRecords],
+  );
+  const formattedTotalScore = displayedTotalScore.toLocaleString('tr-TR');
   const timeIsLow = secondsRemaining <= 10;
   const canGoNext = !isLastLevel;
   const formattedTime = Math.floor(secondsRemaining / 60) + ':' + String(secondsRemaining % 60).padStart(2, '0');
 
+  useEffect(() => {
+    if (scoreFlight === null) {
+      setDisplayedTotalScore(totalScore);
+    }
+  }, [scoreFlight, totalScore]);
+
+  useEffect(
+    () => () => {
+      scoreFlightAnimation.current?.stop();
+    },
+    [],
+  );
+
+  function launchScoreFlight(
+    earnedScore: number,
+    addedScore: number,
+    nextTotal: number,
+  ) {
+    scoreFlightAnimation.current?.stop();
+    scoreFlightProgress.setValue(0);
+    scorePillPulse.setValue(0);
+    setScoreFlight({ addedScore, earnedScore, nextTotal });
+
+    requestAnimationFrame(() => {
+      const flight = Animated.timing(scoreFlightProgress, {
+        toValue: 1,
+        duration: 900,
+        easing: Easing.inOut(Easing.cubic),
+        useNativeDriver: true,
+      });
+
+      scoreFlightAnimation.current = flight;
+      flight.start(({ finished }) => {
+        if (!finished) {
+          return;
+        }
+
+        setDisplayedTotalScore(nextTotal);
+        setScoreFlight(null);
+        Animated.sequence([
+          Animated.spring(scorePillPulse, {
+            toValue: 1,
+            damping: 7,
+            stiffness: 260,
+            mass: 0.55,
+            useNativeDriver: true,
+          }),
+          Animated.timing(scorePillPulse, {
+            toValue: 0,
+            duration: 180,
+            easing: Easing.out(Easing.quad),
+            useNativeDriver: true,
+          }),
+        ]).start();
+
+        if (Platform.OS !== 'web') {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(
+            () => undefined,
+          );
+        }
+      });
+    });
+  }
+
   function resetGame(timeLimit = level.timeLimitSeconds) {
+    scoreFlightAnimation.current?.stop();
+    scoreFlightProgress.setValue(0);
+    scorePillPulse.setValue(0);
+    setScoreFlight(null);
     setPath([]);
     setFirstValue(null);
     setCurrentValue(null);
@@ -350,12 +437,12 @@ export function GameScreen({
   }
 
   useEffect(() => {
-    if (won || lost || settingsOpen || secondsRemaining <= 0) return;
+    if (!hydrated || !playerName || won || lost || settingsOpen || secondsRemaining <= 0) return;
     const timer = setInterval(() => {
       setSecondsRemaining((remaining) => Math.max(0, remaining - 1));
     }, 1000);
     return () => clearInterval(timer);
-  }, [level.id, lost, settingsOpen, won]);
+  }, [hydrated, level.id, lost, playerName, settingsOpen, won]);
 
   useEffect(() => {
     if (!hydrated || restoredProgress.current) return;
@@ -382,6 +469,7 @@ export function GameScreen({
     if (
       !autoAdvance ||
       !won ||
+      scoreFlight !== null ||
       isDailyMode ||
       isLastLevel ||
       settingsOpen ||
@@ -406,6 +494,7 @@ export function GameScreen({
     isLastLevel,
     levelIndex,
     settingsOpen,
+    scoreFlight,
     won,
   ]);
 
@@ -553,6 +642,7 @@ export function GameScreen({
         nextPath,
       )
     ) {
+      const previousBestScore = levelRecords[level.number]?.bestScore ?? 0;
       const summary = recordCompletion({
         levelNumber: level.number,
         timeLimitSeconds: level.timeLimitSeconds,
@@ -561,10 +651,13 @@ export function GameScreen({
         parPathLength: level.parPathLength,
         usedHint,
       });
+      const addedScore = Math.max(0, summary.score - previousBestScore);
       setCompletionSummary(summary);
       setWon(true);
       if (isDailyMode) {
         recordDailyCompletion(todayDateStr);
+      } else {
+        launchScoreFlight(summary.score, addedScore, totalScore + addedScore);
       }
       setMessage(
         `Harika! Hedef çözüldü · ${summary.stars}/3 yıldız · ${summary.score} puan.`,
@@ -825,25 +918,67 @@ export function GameScreen({
         <View pointerEvents="none" style={styles.backgroundScrim} />
       ) : null}
 
-      <ScrollView
-        contentContainerStyle={[
-          styles.content,
-          { paddingTop: Platform.OS === 'android' ? 48 : 64 },
-        ]}
-        scrollEnabled={!pendingCell}
-        showsVerticalScrollIndicator={false}
-      >
+      <SafeAreaView style={styles.safeArea}>
+        <ScrollView
+          contentContainerStyle={styles.content}
+          scrollEnabled={!pendingCell}
+          showsVerticalScrollIndicator={false}
+        >
+        <MainModeSwitch
+          activeMode="math"
+          onSelectMath={() => undefined}
+          onSelectTurkish={onOpenWordWheel}
+          paper={isPaperTheme}
+        />
+
         <View style={styles.header}>
-          <View>
+          <View style={styles.headerCopyBlock}>
             <Text style={[styles.levelTitle, isPaperTheme && styles.textPaper]}>
               {isDailyMode ? 'Günlük Bulmaca' : `Seviye ${level.number}`}
             </Text>
-            <Text style={[styles.difficultyText, isPaperTheme && styles.mutedTextPaper]}>
-              {isDailyMode ? `${todayDateStr} · 🔥 ${dailyStreak ?? 0} Gün` : `${mechanicLabel} · ${difficulty.label} ${difficulty.score}/100`}
-            </Text>
+            {playerName ? (
+              <Text style={[styles.playerName, isPaperTheme && styles.playerNamePaper]}>
+                @{playerName}
+              </Text>
+            ) : null}
+            {isDailyMode ? (
+              <Text style={[styles.difficultyText, isPaperTheme && styles.mutedTextPaper]}>
+                {todayDateStr} · 🔥 {dailyStreak ?? 0} Gün
+              </Text>
+            ) : (
+              <Animated.View
+                accessibilityLabel={`Toplam puan ${formattedTotalScore}`}
+                style={[
+                  styles.totalScorePill,
+                  isPaperTheme && styles.totalScorePillPaper,
+                  {
+                    transform: [
+                      {
+                        scale: scorePillPulse.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [1, 1.13],
+                        }),
+                      },
+                    ],
+                  },
+                ]}
+              >
+                <View style={[styles.totalScoreGem, isPaperTheme && styles.totalScoreGemPaper]}>
+                  <Text style={styles.totalScoreGemText}>◆</Text>
+                </View>
+                <View>
+                  <Text style={[styles.totalScoreLabel, isPaperTheme && styles.totalScoreLabelPaper]}>
+                    TOPLAM PUAN
+                  </Text>
+                  <Text style={[styles.totalScoreValue, isPaperTheme && styles.totalScoreValuePaper]}>
+                    {formattedTotalScore}
+                  </Text>
+                </View>
+              </Animated.View>
+            )}
           </View>
 
-          <View style={{ flexDirection: 'row', gap: 8 }}>
+          <View style={styles.headerActions}>
             {isDailyMode ? (
               <Pressable
                 accessibilityLabel="Günlük bulmacadan çık"
@@ -1104,25 +1239,6 @@ export function GameScreen({
           ) : null}
         </BlurView>
 
-        {!won && !lost ? (
-          <BlurView
-          accessibilityLiveRegion="polite"
-          intensity={isPaperTheme ? 10 : 34}
-          tint={isPaperTheme ? "light" : "dark"}
-          style={[
-            styles.messageCard,
-            isPaperTheme && styles.panelPaper,
-          ]}
-        >
-          <View
-            style={[
-              styles.messageDot,
-              isPaperTheme && styles.messageDotPaper,
-            ]}
-          />
-          <Text style={[styles.message, isPaperTheme && styles.textPaper]}>{message}</Text>
-          </BlurView>
-        ) : null}
 
         {lost ? (
           <FailCard
@@ -1156,7 +1272,7 @@ export function GameScreen({
                   importantForAccessibility="no"
                   style={[styles.secondaryButtonIcon, isPaperTheme && styles.textPaper]}
                 >
-                  ↶
+                  ↩︎
                 </Text>
                 <Text style={[styles.secondaryButtonText, isPaperTheme && styles.textPaper]}>Geri Al</Text>
               </View>
@@ -1190,7 +1306,72 @@ export function GameScreen({
         {showHints && !won && !lost ? (
           <StagedHint level={level} onReveal={revealNextHint} paper={isPaperTheme} stage={hintStage} />
         ) : null}
-      </ScrollView>
+        </ScrollView>
+      </SafeAreaView>
+
+      {scoreFlight ? (
+        <View pointerEvents="none" style={styles.scoreFlightLayer}>
+          <Animated.View
+            style={[
+              styles.scoreFlightBadge,
+              isPaperTheme && styles.scoreFlightBadgePaper,
+              {
+                left: width / 2 - 57,
+                top: Math.min(height * 0.67, 610),
+                opacity: scoreFlightProgress.interpolate({
+                  inputRange: [0, 0.08, 0.86, 1],
+                  outputRange: [0, 1, 1, 0],
+                }),
+                transform: [
+                  {
+                    translateX: scoreFlightProgress.interpolate({
+                      inputRange: [0, 0.5, 1],
+                      outputRange: [
+                        0,
+                        -36,
+                        Math.max(16, (width - 420) / 2) - width / 2 + 106,
+                      ],
+                    }),
+                  },
+                  {
+                    translateY: scoreFlightProgress.interpolate({
+                      inputRange: [0, 0.38, 1],
+                      outputRange: [
+                        0,
+                        -105,
+                        (Platform.OS === 'android' ? 112 : 128) -
+                          Math.min(height * 0.67, 610),
+                      ],
+                    }),
+                  },
+                  {
+                    scale: scoreFlightProgress.interpolate({
+                      inputRange: [0, 0.14, 0.75, 1],
+                      outputRange: [0.72, 1.08, 0.92, 0.58],
+                    }),
+                  },
+                  {
+                    rotate: scoreFlightProgress.interpolate({
+                      inputRange: [0, 0.6, 1],
+                      outputRange: ['-8deg', '5deg', '0deg'],
+                    }),
+                  },
+                ],
+              },
+            ]}
+          >
+            <Text style={styles.scoreFlightSpark}>✦</Text>
+            <Text style={[styles.scoreFlightValue, isPaperTheme && styles.scoreFlightValuePaper]}>
+              {scoreFlight.addedScore > 0
+                ? `+${scoreFlight.addedScore.toLocaleString('tr-TR')}`
+                : scoreFlight.earnedScore.toLocaleString('tr-TR')}
+            </Text>
+            <Text style={[styles.scoreFlightLabel, isPaperTheme && styles.scoreFlightLabelPaper]}>
+              {scoreFlight.addedScore > 0 ? 'TOPLAMA EKLE' : 'BÖLÜM SKORU'}
+            </Text>
+          </Animated.View>
+        </View>
+      ) : null}
 
       <Modal
         animationType="fade"
@@ -1202,7 +1383,7 @@ export function GameScreen({
         presentationStyle="overFullScreen"
         statusBarTranslucent
         transparent
-        visible={won && completionSummary !== null}
+        visible={won && completionSummary !== null && scoreFlight === null}
       >
         <View style={styles.successOverlay}>
           {completionSummary ? (
@@ -1268,6 +1449,12 @@ export function GameScreen({
         }}
         paper={isPaperTheme}
         visible={dailyModalOpen}
+      />
+
+      <PlayerNameModal
+        onSubmit={setPlayerName}
+        paper={isPaperTheme}
+        visible={hydrated && !playerName}
       />
     </ImageBackground>
   );
@@ -1446,7 +1633,11 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: 'center',
     paddingHorizontal: 16,
+    paddingTop: 12,
     paddingBottom: 38,
+  },
+  safeArea: {
+    flex: 1,
   },
   header: {
     width: '100%',
@@ -1455,6 +1646,15 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'space-between',
     marginBottom: 20,
+  },
+  headerCopyBlock: {
+    flexShrink: 1,
+    alignItems: 'flex-start',
+  },
+  headerActions: {
+    marginTop: 12,
+    flexDirection: 'row',
+    gap: 8,
   },
   settingsButton: {
     width: 50,
@@ -1489,6 +1689,129 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: '800',
     letterSpacing: 0.4,
+  },
+  playerName: {
+    marginTop: 2,
+    color: 'rgba(255, 255, 255, 0.76)',
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 0.35,
+  },
+  playerNamePaper: {
+    color: '#A5681F',
+  },
+  totalScorePill: {
+    minWidth: 132,
+    marginTop: 7,
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 209, 102, 0.58)',
+    backgroundColor: 'rgba(70, 46, 12, 0.64)',
+    shadowColor: '#FFBF3F',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 6,
+  },
+  totalScorePillPaper: {
+    borderColor: '#E2B263',
+    backgroundColor: '#FFF0D2',
+    shadowColor: '#B06B18',
+    shadowOpacity: 0.18,
+  },
+  totalScoreGem: {
+    width: 27,
+    height: 27,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 9,
+    backgroundColor: '#FFD166',
+  },
+  totalScoreGemPaper: {
+    backgroundColor: '#D78A2C',
+  },
+  totalScoreGemText: {
+    color: '#5A3908',
+    fontSize: 12,
+    fontWeight: '900',
+  },
+  totalScoreLabel: {
+    color: '#FFE7AA',
+    fontSize: 8,
+    fontWeight: '900',
+    letterSpacing: 1.1,
+  },
+  totalScoreLabelPaper: {
+    color: '#9A631E',
+  },
+  totalScoreValue: {
+    marginTop: 1,
+    color: '#FFFFFF',
+    fontSize: 17,
+    lineHeight: 19,
+    fontWeight: '900',
+    fontVariant: ['tabular-nums'],
+  },
+  totalScoreValuePaper: {
+    color: '#8A4F0F',
+  },
+  scoreFlightLayer: {
+    ...StyleSheet.absoluteFill,
+    zIndex: 40,
+  },
+  scoreFlightBadge: {
+    position: 'absolute',
+    width: 114,
+    minHeight: 64,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 22,
+    borderWidth: 2,
+    borderColor: '#FFE09A',
+    backgroundColor: '#5D3B0B',
+    shadowColor: '#FFC54D',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.72,
+    shadowRadius: 18,
+    elevation: 14,
+  },
+  scoreFlightBadgePaper: {
+    borderColor: '#E2A94D',
+    backgroundColor: '#FFF3D8',
+    shadowColor: '#C1741D',
+    shadowOpacity: 0.42,
+  },
+  scoreFlightSpark: {
+    position: 'absolute',
+    right: 8,
+    top: 5,
+    color: '#FFD166',
+    fontSize: 14,
+  },
+  scoreFlightValue: {
+    color: '#FFFFFF',
+    fontSize: 23,
+    lineHeight: 25,
+    fontWeight: '900',
+    fontVariant: ['tabular-nums'],
+  },
+  scoreFlightValuePaper: {
+    color: '#8A4F0F',
+  },
+  scoreFlightLabel: {
+    marginTop: 2,
+    color: '#FFE7AA',
+    fontSize: 7,
+    fontWeight: '900',
+    letterSpacing: 0.8,
+  },
+  scoreFlightLabelPaper: {
+    color: '#A2671E',
   },
   headerStats: {
     flexDirection: 'row',
@@ -1883,10 +2206,12 @@ const styles = StyleSheet.create({
     gap: 7,
   },
   secondaryButtonIcon: {
+    width: 20,
     color: colors.text,
     fontSize: 20,
-    lineHeight: 22,
+    lineHeight: 20,
     fontWeight: '800',
+    textAlign: 'center',
   },
   secondaryButtonText: {
     color: colors.text,

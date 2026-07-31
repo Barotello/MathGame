@@ -1,4 +1,11 @@
-import type { GeniusChapter, Level, MathValue, NumberCell, Operator } from '../types/game';
+import type {
+  GeniusChapter,
+  Level,
+  MathValue,
+  NumberCell,
+  Operator,
+} from '../types/game';
+import { calculate } from './engine';
 
 function pseudoRand(seed: number): () => number {
   let s = seed;
@@ -6,6 +13,12 @@ function pseudoRand(seed: number): () => number {
     s = (s * 1664525 + 1013904223) % 4294967296;
     return s / 4294967296;
   };
+}
+
+function getIntermediateValueLimit(levelNumber: number): number {
+  if (levelNumber <= 50) return 500;
+  if (levelNumber <= 80) return 2_000;
+  return 10_000;
 }
 
 export function generateLevel(levelNumber: number): Level {
@@ -67,6 +80,11 @@ export function generateLevel(levelNumber: number): Level {
 
   const totalCells = rows * cols;
   const cells: NumberCell[] = [];
+  const rules = {
+    allowNegativeResults: true,
+    requireExactDivision: true,
+    maxAbsoluteIntermediateValue: getIntermediateValueLimit(levelNumber),
+  };
 
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
@@ -79,29 +97,42 @@ export function generateLevel(levelNumber: number): Level {
     }
   }
 
-  // Pick solvable path
-  const startIdx = Math.floor(rand() * totalCells);
-  const path: number[] = [startIdx];
-  let currentIdx = startIdx;
+  // Aynı seed için aynı yolu üret; nadir bir çıkmazda yeni başlangıç dene.
+  let path: number[] = [];
 
-  for (let s = 1; s < pathLen; s++) {
-    const r = cells[currentIdx].position.row;
-    const c = cells[currentIdx].position.column;
+  for (
+    let attempt = 0;
+    attempt < totalCells && path.length < pathLen;
+    attempt += 1
+  ) {
+    const startIdx = Math.floor(rand() * totalCells);
+    const candidatePath: number[] = [startIdx];
+    let currentIdx = startIdx;
 
-    const validNeighbors: number[] = [];
-    cells.forEach((cell, i) => {
-      if (path.includes(i)) return;
-      const dr = Math.abs(cell.position.row - r);
-      const dc = Math.abs(cell.position.column - c);
-      if ((dr === 1 && dc === 0) || (dr === 0 && dc === 1)) {
-        validNeighbors.push(i);
-      }
-    });
+    for (let step = 1; step < pathLen; step += 1) {
+      const row = cells[currentIdx].position.row;
+      const column = cells[currentIdx].position.column;
+      const validNeighbors = cells.flatMap((cell, index) => {
+        if (candidatePath.includes(index)) return [];
+        const rowDistance = Math.abs(cell.position.row - row);
+        const columnDistance = Math.abs(cell.position.column - column);
+        return rowDistance + columnDistance === 1 ? [index] : [];
+      });
 
-    if (validNeighbors.length === 0) break;
-    const nextIdx = validNeighbors[Math.floor(rand() * validNeighbors.length)];
-    path.push(nextIdx);
-    currentIdx = nextIdx;
+      if (validNeighbors.length === 0) break;
+      const nextIdx =
+        validNeighbors[Math.floor(rand() * validNeighbors.length)];
+      candidatePath.push(nextIdx);
+      currentIdx = nextIdx;
+    }
+
+    if (candidatePath.length > path.length) path = candidatePath;
+  }
+
+  if (path.length !== pathLen) {
+    throw new Error(
+      `Seviye ${levelNumber} için ${pathLen} hücrelik yol üretilemedi.`,
+    );
   }
 
   let accVal = cells[path[0]].value as number;
@@ -109,16 +140,24 @@ export function generateLevel(levelNumber: number): Level {
 
   for (let i = 1; i < path.length; i++) {
     const operand = cells[path[i]].value as number;
-    let op: Operator = allowedOperators[Math.floor(rand() * allowedOperators.length)];
+    const validOperators = allowedOperators.filter((operator) =>
+      calculate(accVal, operator, operand, rules).ok,
+    );
 
-    if (op === '÷' && (operand === 0 || accVal % operand !== 0)) {
-      op = '+';
+    if (validOperators.length === 0) {
+      throw new Error(`Seviye ${levelNumber} için geçerli işlem üretilemedi.`);
     }
 
-    if (op === '+') accVal += operand;
-    else if (op === '−') accVal -= operand;
-    else if (op === '×') accVal *= operand;
-    else if (op === '÷') accVal = Math.floor(accVal / operand);
+    const op = validOperators[Math.floor(rand() * validOperators.length)];
+    const result = calculate(accVal, op, operand, rules);
+
+    if (!result.ok || typeof result.value !== 'number') {
+      throw new Error(
+        `Seviye ${levelNumber} için çözüm adımı doğrulanamadı.`,
+      );
+    }
+
+    accVal = result.value;
 
     pathOperators.push(op);
   }
@@ -136,15 +175,16 @@ export function generateLevel(levelNumber: number): Level {
     parPathLength: path.length,
     timeLimitSeconds: timeLimit,
     hint: `İlk sayı ${cells[path[0]].value}. Sonraki komşu adımda hedefe doğru ilerle.`,
-    rules: {
-      allowNegativeResults: true,
-      requireExactDivision: true,
-      maxAbsoluteIntermediateValue: 999,
-    },
+    rules,
     knownSolution: {
       cellIds: solutionCellIds,
       operators: pathOperators,
     },
+    exactPathLength: path.length,
+    requiredOperators:
+      levelNumber >= 51 ? [...new Set(pathOperators)] : undefined,
+    requiredOperatorSequence:
+      levelNumber >= 91 ? pathOperators : undefined,
     geniusChapter,
   };
 }

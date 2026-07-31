@@ -148,6 +148,54 @@ export function validateDifficultyCurve(levels: Level[]) {
       }
     }
 
+    if (level.number >= 31 && level.number <= 100) {
+      const expectedRows = 4;
+      const expectedColumns = level.number <= 40 ? 3 : 4;
+      const expectedPathLength = level.number <= 70 ? 4 : 5;
+      const expectedIntermediateLimit =
+        level.number <= 50 ? 500 : level.number <= 80 ? 2_000 : 10_000;
+
+      if (
+        level.rows !== expectedRows ||
+        level.columns !== expectedColumns
+      ) {
+        issues.push(
+          `test paketi ${expectedRows}×${expectedColumns} olmalı`,
+        );
+      }
+      if (level.allowedOperators.length !== 4) {
+        issues.push('test paketinde dört işlem açık olmalı');
+      }
+      if (
+        level.parPathLength !== expectedPathLength ||
+        level.exactPathLength !== expectedPathLength
+      ) {
+        issues.push(
+          `test paketinde kesin yol ${expectedPathLength} hücre olmalı`,
+        );
+      }
+      if (
+        level.rules.maxAbsoluteIntermediateValue !==
+        expectedIntermediateLimit
+      ) {
+        issues.push(
+          `ara sonuç sınırı ${expectedIntermediateLimit} olmalı`,
+        );
+      }
+      if (
+        level.number >= 51 &&
+        (level.requiredOperators?.length ?? 0) === 0
+      ) {
+        issues.push('ileri test paketinde zorunlu işlem bulunmalı');
+      }
+      if (
+        level.number >= 91 &&
+        level.requiredOperatorSequence?.length !== expectedPathLength - 1
+      ) {
+        issues.push('final test paketinde kesin işlem sırası bulunmalı');
+      }
+    }
+
     return issues.map((issue) => `${level.id}: ${issue}`);
   });
 }
