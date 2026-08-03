@@ -6,9 +6,24 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
+    "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "ios": {
+            "backgroundColor": "#FFF7EA",
+            "image": "./assets/ios-icon-v2.png",
+            "imageWidth": 180,
+            "resizeMode": "contain"
+          }
+        }
+      ],
+      "expo-asset"
+    ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.hedefsayi"
+      "bundleIdentifier": "com.anonymous.hedefsayi",
+      "icon": "./assets/ios-icon-v2.png"
     },
     "android": {
       "adaptiveIcon": {

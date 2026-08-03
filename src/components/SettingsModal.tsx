@@ -12,41 +12,48 @@ import {
 import { colors } from '../theme/colors';
 import { themeOptions, type ThemeId } from '../theme/themes';
 import type { LevelRecord } from '../types/progress';
+import { LeaderboardPanel } from './LeaderboardPanel';
 import { LevelPicker } from './LevelPicker';
 import { ThemePicker } from './ThemePicker';
 
 type Props = {
+  activeGameMode: 'math' | 'word';
   completedLevelNumbers: number[];
   currentLevelIndex: number;
   levelRecords: Record<number, LevelRecord>;
+  playerName?: string;
   onClose: () => void;
-  onOpenWallBreaker: () => void;
+  onOpenMath: () => void;
   onOpenWordWheel: () => void;
   onRestart: () => void;
   onSelectLevel: (index: number) => void;
   onShowHintsChange: (value: boolean) => void;
   onThemeChange: (themeId: ThemeId) => void;
   showHints: boolean;
+  showMathProgress?: boolean;
   themeId: ThemeId;
   visible: boolean;
 };
 
 export function SettingsModal({
+  activeGameMode,
   completedLevelNumbers,
   currentLevelIndex,
   levelRecords,
+  playerName,
   onClose,
-  onOpenWallBreaker,
+  onOpenMath,
   onOpenWordWheel,
   onRestart,
   onSelectLevel,
   onShowHintsChange,
   onThemeChange,
   showHints,
+  showMathProgress = true,
   themeId,
   visible,
 }: Props) {
-  const [screen, setScreen] = useState<'settings' | 'themes'>('settings');
+  const [screen, setScreen] = useState<'settings' | 'themes' | 'leaderboard'>('settings');
   const paper = themeId === 'paper';
 
   useEffect(() => {
@@ -74,24 +81,24 @@ export function SettingsModal({
           >
             <View style={[styles.header, paper && styles.headerPaper]}>
               <View>
-                {screen === 'themes' ? (
+                {screen !== 'settings' ? (
                   <Text style={[styles.eyebrow, paper && styles.eyebrowPaper]}>
-                    GÖRÜNÜM
+                    {screen === 'themes' ? 'GÖRÜNÜM' : 'REKABET'}
                   </Text>
                 ) : null}
                 <Text style={[styles.title, paper && styles.textPaper]}>
-                  {screen === 'themes' ? 'Tema' : 'Ayarlar'}
+                  {screen === 'themes' ? 'Tema' : screen === 'leaderboard' ? 'Genel Sıralama' : 'Ayarlar'}
                 </Text>
               </View>
               <View style={styles.headerActions}>
                 <Pressable
-                  accessibilityLabel={screen === 'themes' ? 'Ayarlara dön' : 'Ayarları kapat'}
+                  accessibilityLabel={screen !== 'settings' ? 'Ayarlara dön' : 'Ayarları kapat'}
                   accessibilityRole="button"
-                  onPress={screen === 'themes' ? () => setScreen('settings') : onClose}
+                  onPress={screen !== 'settings' ? () => setScreen('settings') : onClose}
                   style={[styles.closeButton, paper && styles.closeButtonPaper]}
                 >
                   <Text style={[styles.closeText, paper && styles.textPaper]}>
-                    {screen === 'themes' ? '‹' : '×'}
+                    {screen !== 'settings' ? '‹' : '×'}
                   </Text>
                 </Pressable>
               </View>
@@ -99,8 +106,137 @@ export function SettingsModal({
 
             {screen === 'themes' ? (
               <ThemePicker onSelect={onThemeChange} themeId={themeId} />
+            ) : screen === 'leaderboard' ? (
+              <LeaderboardPanel levelRecords={levelRecords} paper={paper} playerName={playerName} />
             ) : (
               <>
+                <View style={styles.mainModesSection}>
+                  <Text style={[styles.sectionEyebrow, paper && styles.sectionEyebrowPaper]}>
+                    ANA OYUNLAR
+                  </Text>
+                  <Text style={[styles.sectionDescription, paper && styles.mutedTextPaper]}>
+                    Oynamak istediğin alanı seç.
+                  </Text>
+
+                  <View style={styles.mainModesGrid}>
+                    <Pressable
+                      accessibilityLabel={
+                        activeGameMode === 'math'
+                          ? 'Matematik, aktif oyun alanı'
+                          : 'Matematik oyun alanına geç'
+                      }
+                      accessibilityRole="button"
+                      accessibilityState={{ selected: activeGameMode === 'math' }}
+                      onPress={activeGameMode === 'math' ? onClose : onOpenMath}
+                      style={({ pressed }) => [
+                        styles.mainModeCard,
+                        paper && styles.mainModeCardPaper,
+                        activeGameMode === 'math'
+                          ? styles.mathModeCard
+                          : styles.inactiveModeCard,
+                        paper &&
+                          (activeGameMode === 'math'
+                            ? styles.mathModeCardPaper
+                            : styles.inactiveModeCardPaper),
+                        pressed && styles.buttonPressed,
+                      ]}
+                    >
+                      <View style={[styles.mainModeIcon, styles.mathMainModeIcon]}>
+                        <Text style={styles.mainModeIconText}>∑</Text>
+                      </View>
+                      <Text style={[styles.mainModeTitle, paper && styles.textPaper]}>
+                        Matematik
+                      </Text>
+                      <Text style={[styles.mainModeDescription, paper && styles.mutedTextPaper]}>
+                        Hedef sayıyı bul
+                      </Text>
+                      {activeGameMode === 'math' ? (
+                        <View style={[styles.activeModeBadge, paper && styles.activeModeBadgePaper]}>
+                          <Text style={[styles.activeModeBadgeText, paper && styles.activeModeBadgeTextPaper]}>
+                            ✓ AKTİF
+                          </Text>
+                        </View>
+                      ) : (
+                        <View style={[styles.enterModeBadge, paper && styles.enterModeBadgePaper]}>
+                          <Text style={[styles.enterModeBadgeText, paper && styles.enterModeBadgeTextPaper]}>
+                            OYNA  ›
+                          </Text>
+                        </View>
+                      )}
+                    </Pressable>
+
+                    <Pressable
+                      accessibilityLabel={
+                        activeGameMode === 'word'
+                          ? 'Kelime Bulma, aktif oyun alanı'
+                          : 'Kelime Bulma oyun alanına geç'
+                      }
+                      accessibilityRole="button"
+                      accessibilityState={{ selected: activeGameMode === 'word' }}
+                      onPress={activeGameMode === 'word' ? onClose : onOpenWordWheel}
+                      style={({ pressed }) => [
+                        styles.mainModeCard,
+                        paper && styles.mainModeCardPaper,
+                        activeGameMode === 'word'
+                          ? styles.wordMainModeCard
+                          : styles.inactiveModeCard,
+                        paper &&
+                          (activeGameMode === 'word'
+                            ? styles.wordMainModeCardPaper
+                            : styles.inactiveModeCardPaper),
+                        pressed && styles.buttonPressed,
+                      ]}
+                    >
+                      <View style={[styles.mainModeIcon, styles.wordMainModeIcon]}>
+                        <Text style={styles.mainModeIconText}>ABC</Text>
+                      </View>
+                      <Text style={[styles.mainModeTitle, paper && styles.textPaper]}>
+                        Kelime Bulma
+                      </Text>
+                      <Text style={[styles.mainModeDescription, paper && styles.mutedTextPaper]}>
+                        İpucundan kelimeyi çöz
+                      </Text>
+                      {activeGameMode === 'word' ? (
+                        <View style={[styles.activeModeBadge, paper && styles.activeModeBadgePaper]}>
+                          <Text style={[styles.activeModeBadgeText, paper && styles.activeModeBadgeTextPaper]}>
+                            ✓ AKTİF
+                          </Text>
+                        </View>
+                      ) : (
+                        <View style={[styles.enterModeBadge, paper && styles.enterModeBadgePaper]}>
+                          <Text style={[styles.enterModeBadgeText, paper && styles.enterModeBadgeTextPaper]}>
+                            OYNA  ›
+                          </Text>
+                        </View>
+                      )}
+                    </Pressable>
+                  </View>
+                </View>
+
+                <Pressable
+                  accessibilityLabel="Genel sıralamayı aç"
+                  accessibilityRole="button"
+                  onPress={() => setScreen('leaderboard')}
+                  style={({ pressed }) => [
+                    styles.leaderboardRow,
+                    paper && styles.leaderboardRowPaper,
+                    pressed && styles.buttonPressed,
+                  ]}
+                >
+                  <View style={[styles.leaderboardIcon, paper && styles.leaderboardIconPaper]}>
+                    <Text style={styles.leaderboardIconText}>🏆</Text>
+                  </View>
+                  <View style={styles.rowCopy}>
+                    <Text style={[styles.rowTitle, paper && styles.textPaper]}>
+                      Genel Sıralama
+                    </Text>
+                    <Text style={[styles.rowText, paper && styles.mutedTextPaper]}>
+                      Tüm oyuncularla puanını karşılaştır.
+                    </Text>
+                  </View>
+                  <Text style={[styles.themeChevron, paper && styles.mutedTextPaper]}>›</Text>
+                </Pressable>
+
                 <Pressable
                   accessibilityLabel={`Tema, ${themeOptions[themeId].name}`}
                   accessibilityRole="button"
@@ -129,83 +265,29 @@ export function SettingsModal({
                   value={showHints}
                 />
 
-                <Pressable
-                  accessibilityLabel="Ekstra Modlar, Duvar Yıkma"
-                  accessibilityRole="button"
-                  onPress={onOpenWallBreaker}
-                  style={({ pressed }) => [
-                    styles.modeRow,
-                    paper && styles.modeRowPaper,
-                    pressed && styles.buttonPressed,
-                  ]}
-                >
-                  <View style={styles.modeIcon}>
-                    <Text style={styles.modeIconText}>3D</Text>
-                  </View>
-                  <View style={styles.rowCopy}>
-                    <Text style={[styles.modeEyebrow, paper && styles.eyebrowPaper]}>
-                      EKSTRA MODLAR
-                    </Text>
-                    <Text style={[styles.rowTitle, paper && styles.textPaper]}>
-                      Duvar Yıkma
-                    </Text>
-                    <Text style={[styles.rowText, paper && styles.mutedTextPaper]}>
-                      Three.js destekli zincir ve duvar modu
-                    </Text>
-                  </View>
-                  <Text style={[styles.themeChevron, paper && styles.mutedTextPaper]}>
-                    ›
-                  </Text>
-                </Pressable>
+                {showMathProgress ? (
+                  <>
+                    <LevelPicker
+                      completedLevelNumbers={completedLevelNumbers}
+                      currentLevelIndex={currentLevelIndex}
+                      levelRecords={levelRecords}
+                      onSelectLevel={onSelectLevel}
+                      paper={paper}
+                    />
 
-
-                <Pressable
-                  accessibilityLabel="Ana Oyun Modu, Türkçe"
-                  accessibilityRole="button"
-                  onPress={onOpenWordWheel}
-                  style={({ pressed }) => [
-                    styles.modeRow,
-                    paper && styles.modeRowPaper,
-                    pressed && styles.buttonPressed,
-                  ]}
-                >
-                  <View style={[styles.modeIcon, styles.wordModeIcon]}>
-                    <Text style={styles.modeIconText}>ABC</Text>
-                  </View>
-                  <View style={styles.rowCopy}>
-                    <Text style={[styles.modeEyebrow, paper && styles.eyebrowPaper]}>
-                      ANA OYUN MODU · TÜRKÇE
-                    </Text>
-                    <Text style={[styles.rowTitle, paper && styles.textPaper]}>
-                      Kelime Çarkı
-                    </Text>
-                    <Text style={[styles.rowText, paper && styles.mutedTextPaper]}>
-                      İpucunu oku, harfleri aç ve kelimeyi bul
-                    </Text>
-                  </View>
-                  <Text style={[styles.themeChevron, paper && styles.mutedTextPaper]}>
-                    ›
-                  </Text>
-                </Pressable>
-                <LevelPicker
-                  completedLevelNumbers={completedLevelNumbers}
-                  currentLevelIndex={currentLevelIndex}
-                  levelRecords={levelRecords}
-                  onSelectLevel={onSelectLevel}
-                  paper={paper}
-                />
-
-                <Pressable
-                  accessibilityRole="button"
-                  onPress={onRestart}
-                  style={({ pressed }) => [
-                    styles.restartButton,
-                    paper && styles.restartButtonPaper,
-                    pressed && styles.buttonPressed,
-                  ]}
-                >
-                  <Text style={styles.restartText}>Bölümü Yeniden Başlat</Text>
-                </Pressable>
+                    <Pressable
+                      accessibilityRole="button"
+                      onPress={onRestart}
+                      style={({ pressed }) => [
+                        styles.restartButton,
+                        paper && styles.restartButtonPaper,
+                        pressed && styles.buttonPressed,
+                      ]}
+                    >
+                      <Text style={styles.restartText}>Bölümü Yeniden Başlat</Text>
+                    </Pressable>
+                  </>
+                ) : null}
               </>
             )}
           </ScrollView>
@@ -357,7 +439,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(120, 120, 128, 0.32)',
   },
   switchTrackOn: {
-    backgroundColor: '#007AFF',
+    borderWidth: 1,
+    borderColor: '#8CFFB9',
+    backgroundColor: '#22C96B',
+    shadowColor: '#22C96B',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.5,
+    shadowRadius: 7,
+    elevation: 6,
   },
   switchThumb: {
     width: 22,
@@ -372,6 +461,10 @@ const styles = StyleSheet.create({
     transform: [{ translateX: 0 }],
   },
   switchThumbOn: {
+    backgroundColor: '#F7FFF9',
+    shadowColor: '#087A3A',
+    shadowOpacity: 0.38,
+    shadowRadius: 4,
     transform: [{ translateX: 18 }],
   },
   switchPressed: {
@@ -409,7 +502,10 @@ const styles = StyleSheet.create({
     color: '#8C847E',
   },
   switchTrackOnPaper: {
-    backgroundColor: '#8C847E',
+    borderColor: '#0D9548',
+    backgroundColor: '#18B95A',
+    shadowColor: '#18B95A',
+    shadowOpacity: 0.34,
   },
   restartButtonPaper: {
     backgroundColor: '#4A443F',
@@ -443,46 +539,135 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.82)',
     backgroundColor: 'rgba(242, 237, 231, 0.7)',
   },
-  modeRow: {
-    marginTop: 16,
-    marginBottom: 4,
-    minHeight: 76,
-    paddingHorizontal: 12,
+  mainModesSection: {
+    marginTop: 10,
+  },
+  sectionEyebrow: {
+    color: '#F1C66E',
+    fontSize: 9,
+    fontWeight: '900',
+    letterSpacing: 1.5,
+  },
+  sectionEyebrowPaper: {
+    color: '#A5681F',
+  },
+  sectionDescription: {
+    marginTop: 3,
+    color: 'rgba(255, 255, 255, 0.66)',
+    fontSize: 11,
+    fontWeight: '600',
+  },
+  mainModesGrid: {
+    marginTop: 10,
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 11,
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: 'rgba(185, 218, 130, 0.34)',
-    backgroundColor: 'rgba(82, 107, 57, 0.28)',
+    gap: 10,
   },
-  modeRowPaper: {
-    borderColor: '#D8D0C8',
-    backgroundColor: '#F2EDE7',
+  mainModeCard: {
+    flex: 1,
+    minHeight: 150,
+    padding: 13,
+    borderRadius: 20,
+    borderWidth: 1.5,
   },
-  modeIcon: {
+  mainModeCardPaper: {
+    backgroundColor: 'rgba(255, 252, 247, 0.9)',
+  },
+  inactiveModeCard: {
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+  },
+  inactiveModeCardPaper: {
+    borderColor: '#D8CFC5',
+    backgroundColor: '#FFFDFC',
+  },
+  mathModeCard: {
+    borderColor: '#E5A33B',
+    backgroundColor: 'rgba(120, 77, 17, 0.54)',
+  },
+  mathModeCardPaper: {
+    borderColor: '#D78A2C',
+    backgroundColor: '#FFF0D2',
+  },
+  wordMainModeCard: {
+    borderColor: 'rgba(196, 154, 116, 0.72)',
+    backgroundColor: 'rgba(103, 70, 48, 0.48)',
+  },
+  wordMainModeCardPaper: {
+    borderColor: '#C9A27F',
+    backgroundColor: '#F7E9DC',
+  },
+  mainModeIcon: {
     width: 42,
     height: 42,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 14,
-    backgroundColor: '#6F845D',
   },
-  wordModeIcon: {
+  mathMainModeIcon: {
+    backgroundColor: '#D78A2C',
+  },
+  wordMainModeIcon: {
     backgroundColor: '#9C7658',
   },
-  modeIconText: {
+  mainModeIconText: {
     color: '#FFFFFF',
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '900',
-    letterSpacing: 0.6,
+    letterSpacing: 0.3,
   },
-  modeEyebrow: {
-    marginBottom: 3,
-    color: '#B9DA82',
+  mainModeTitle: {
+    marginTop: 10,
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '900',
+  },
+  mainModeDescription: {
+    marginTop: 3,
+    minHeight: 30,
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontSize: 10,
+    lineHeight: 14,
+    fontWeight: '600',
+  },
+  activeModeBadge: {
+    alignSelf: 'flex-start',
+    marginTop: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    borderRadius: 9,
+    backgroundColor: '#E5A33B',
+  },
+  activeModeBadgePaper: {
+    backgroundColor: '#D78A2C',
+  },
+  activeModeBadgeText: {
+    color: '#2E1B04',
     fontSize: 8,
     fontWeight: '900',
-    letterSpacing: 1.1,
+    letterSpacing: 0.7,
+  },
+  activeModeBadgeTextPaper: {
+    color: '#FFFFFF',
+  },
+  enterModeBadge: {
+    alignSelf: 'flex-start',
+    marginTop: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    borderRadius: 9,
+    backgroundColor: 'rgba(255, 255, 255, 0.14)',
+  },
+  enterModeBadgePaper: {
+    backgroundColor: '#E9D3BF',
+  },
+  enterModeBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 8,
+    fontWeight: '900',
+    letterSpacing: 0.7,
+  },
+  enterModeBadgeTextPaper: {
+    color: '#76543A',
   },
   themeRow: {
     marginTop: 20,
@@ -503,6 +688,32 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     backgroundColor: 'transparent',
   },
+  leaderboardRow: {
+    marginTop: 20,
+    minHeight: 72,
+    paddingHorizontal: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 209, 102, 0.38)',
+    backgroundColor: 'rgba(181, 120, 24, 0.18)',
+  },
+  leaderboardRowPaper: {
+    borderColor: '#E1BD84',
+    backgroundColor: '#FFF4DE',
+  },
+  leaderboardIcon: {
+    width: 42,
+    height: 42,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 14,
+    backgroundColor: 'rgba(255, 209, 102, 0.18)',
+  },
+  leaderboardIconPaper: { backgroundColor: '#F4D39D' },
+  leaderboardIconText: { fontSize: 21 },
   themeSwatch: {
     width: 28,
     height: 28,

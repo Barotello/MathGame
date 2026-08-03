@@ -33,7 +33,7 @@ Ana tur akışı:
 3. Oyuncu **Harf Aç** düğmesine basarsa kapalı kutular yaklaşık 700–900 ms döner.
 4. Henüz açılmamış konumlardan biri rastgele seçilir ve doğru harf kendi yerinde kilitlenir.
 5. Diğer kapalı kutular tekrar `?` durumuna döner.
-6. Son kutu dolduğunda cevap ayrı bir düğmeye gerek kalmadan otomatik kontrol edilir.
+6. Tüm kutular dolduğunda **Cevapla** düğmesi etkinleşir; oyuncu göndermeden önce harfleri silebilir ve düzeltebilir.
 7. Doğru tahminde başarı animasyonu gösterilir ve oyuncu **Sonraki Kelime** düğmesiyle devam eder.
 8. Yanlış tahminde kutular kısa bir sarsılma animasyonu yapar, doğru cevap gösterilir ve o kelime kapanır. Aynı kelime için ikinci veya üçüncü tahmin hakkı verilmez.
 9. Kelime oturumu 2 dakika sürer. Süre dolduğunda yeni kelime akışı durur ve tur özeti gösterilir.
@@ -41,7 +41,7 @@ Ana tur akışı:
 Terminoloji kararı:
 
 - Sistemin doğru harfi göstermesini sağlayan düğme: **Harf Aç**
-- Oyuncunun cevabı, son harf kutusu dolduğunda otomatik gönderilir.
+- Oyuncunun cevabı yalnızca **Cevapla** düğmesine bastığında gönderilir.
 
 Bu nedenle arayüzde ayrıca **Tahmin Et** düğmesi veya ayrı tahmin kutusu bulunmaz.
 
@@ -49,13 +49,18 @@ Bu nedenle arayüzde ayrıca **Tahmin Et** düğmesi veya ayrı tahmin kutusu bu
 
 ### 3.1 Önerilen MVP kuralları
 
-- İlk içerik paketi yalnızca 3 harfli kelimelerden oluşur.
+- Bölüm 1 kısa ve kolay, ağırlıklı olarak 3 harfli kelimelerden oluşur; sonraki bölümlerde kelime uzunluğu ve zorluk artar.
 - Her turda tek bir açıklama ve tek doğru cevap vardır.
 - Üç harfli bir kelimede en fazla **2 harf açılabilir**.
 - Açılan her harf 100 puan düşürür.
 - Kelimenin başlangıç puanı harf sayısına göre hesaplanır: her harf 100 puandır. Örneğin 3 harfli kelime 300, 4 harfli kelime 400 ve 5 harfli kelime 500 puan verir.
 - Her kelime için yalnızca bir tam tahmin hakkı vardır. Yanlış cevapta kelime kapanır, doğru cevap gösterilir ve o kelimeden puan kazanılmaz.
 - Her oyun oturumu 120 saniye sürer. Süre dolduğunda girişler kilitlenir ve doğru, yanlış ve tur puanı özeti gösterilir.
+- Oyun 10 bölümden oluşur ve her bölümde 10 farklı kelime oynanır.
+- Bölüm 1 en kolay kelime havuzundan başlar; kelime uzunluğu ve içerik zorluğu her bölümde kademeli olarak artar.
+- Bölüm 1'in 10 kelimesi tek uzunluğa sabitlenmez: 3 adet 3 harfli, 4 adet 4 harfli ve 3 adet 5 harfli kelime seçilir.
+- Bir kelime doğru veya yanlış sonuçlandığında bölüm sayacında tamamlanmış kabul edilir. Onuncu kelimeden sonra sonraki bölüm açılır.
+- Bölüm 10'un onuncu kelimesinden sonra ana ilerleme tamamlanır ve genel sonuç gösterilir.
 - Doğru cevaptan sonra oyuncu **Sonraki Kelime** düğmesine basar.
 - Yanlış cevaptan sonra oyuncu da **Sonraki Kelime** düğmesiyle süre devam ederken yeni kelimeye geçer.
 - Tüm harfleri otomatik açan bir özellik bulunmaz; son adımda oyuncunun tahmin yapması gerekir.
@@ -85,16 +90,18 @@ Puanlar ilk kullanıcı testinden sonra değiştirilebilir; kod içinde dağın�
 
 Ekran yukarıdan aşağıya şu bölümlerden oluşur:
 
-1. Geri düğmesi, mod adı ve toplam puan
-2. Kategori etiketi
-3. Büyük açıklama kartı
-4. Harf kutuları
-5. Kalan harf açma hakkı
-6. **Harf Aç** düğmesi
-7. Türkçe ekran klavyesi
-8. **Sil** kontrolü
-9. Başarı/yanlış cevap geri bildirimi
-10. Kalan süre ile oturumdaki doğru, yanlış ve puan özeti
+1. Geri düğmesi, mod adı ve her yeni turda sıfırlanan toplam puan
+2. On bölümün tamamlanma, aktif ve kilit durumlarını gösteren açılır **Bölümler** alanı
+3. Aktif bölüm, bölüm içindeki kelime sırası ve kalan süre
+4. Kategori etiketi
+5. Büyük açıklama kartı
+6. Harf kutuları
+7. Kalan harf açma hakkı
+8. **Harf Aç** düğmesi
+9. Türkçe ekran klavyesi
+10. **Sil** kontrolü
+11. Başarı/yanlış cevap geri bildirimi
+12. Oturumdaki doğru, yanlış ve puan özeti
 
 Türkçe klavye şu harfleri doğrudan desteklemelidir:
 
@@ -118,7 +125,7 @@ Harf açma animasyonu:
 
 Kurallar:
 
-- Animasyon veya otomatik cevap kontrolü sürerken ikinci bir giriş çalışmaz.
+- Animasyon veya cevap kontrolü sürerken ikinci bir giriş çalışmaz.
 - Açılmış harfler sonraki dönüşlerde sabit kalır.
 - “Hareketi azalt” seçeneği eklenirse dönme yerine kısa solma geçişi kullanılır.
 - Animasyon yalnızca görseldir; açılacak konum animasyon başlamadan oyun motoru tarafından belirlenir.
@@ -198,24 +205,21 @@ hedef-sayi-word-wheel-v1
 
 ## 8. Mevcut uygulamaya bağlantı
 
-Mevcut `App.tsx` iki mod arasında geçiş yapmaktadır. Yeni modla birlikte tip şu yönde genişletilir:
+Mevcut `App.tsx` iki ana oyun alanı arasında geçiş yapmaktadır:
 
 ```ts
-type AppMode = 'classic' | 'wall-breaker' | 'word-wheel';
+type AppMode = 'classic' | 'word-wheel';
 ```
 
-Üç mod oluşacağı için Ayarlar içinde tek tek büyüyen mod satırları yerine küçük bir **Oyun Modları** ekranı önerilir:
+Ayarlar içindeki **Ana Oyunlar** alanı iki modu birlikte gösterir:
 
 ```text
 Oyun Modları
   Klasik Hedef Sayı
-  Duvar Yıkma
   Kelime Çarkı
 ```
 
-MVP'nin hızlı teslimi için önce Ayarlar ekranına “Kelime Çarkı” kartı eklenebilir. Sonraki arayüz düzenlemesinde üç mod ortak seçim ekranına taşınabilir.
-
-Kelime modundan çıkmak klasik oyunun seviyesini, kalan süresini veya Duvar Yıkma kaydını değiştirmemelidir.
+Kelime modundan çıkmak klasik oyunun seviyesini veya kalan süresini değiştirmemelidir.
 
 ## 9. İlerleme kaydı
 
@@ -223,16 +227,23 @@ Kelime modundan çıkmak klasik oyunun seviyesini, kalan süresini veya Duvar Y�
 
 ```ts
 type WordWheelProgress = {
-  schemaVersion: 1;
+  schemaVersion: 2;
   totalSolved: number;
+  totalPlayed: number;
   totalScore: number;
   bestRoundScore: number;
   solvedWordIds: string[];
   recentWordIds: string[];
+  currentLevel: number;
+  levelWordIndex: number;
+  currentLevelWordIds: string[];
+  completedLevels: number[];
 };
 ```
 
-`recentWordIds` son 10 kelimeyi tutarak hemen tekrar seçilmelerini engeller. Tüm uygun kelimeler oynandığında havuz yeniden açılır; son birkaç kelime yine korunur.
+`currentLevelWordIds`, aktif bölüm için seçilen 10 kelimeyi saklar. Böylece uygulamadan çıkılıp dönüldüğünde aynı bölüm ve kelime sırası korunur. `recentWordIds` son 10 kelimeyi tutarak bölüm geçişlerinde kısa aralıklı tekrarları engeller.
+
+Kelime bankası; harf uzunluğu, `difficulty` değeri ve kararlı alfabetik sıra dikkate alınarak 10 zorluk havuzuna ayrılır. Her bölüm kendi havuzundan 10 farklı kelime seçer. Bu sayede Bölüm 1 gündelik ve kısa kelimelerle başlar, sonraki bölümlerde daha uzun ve zor kelimelere geçilir.
 
 ## 10. İçerik kalite kuralları
 
@@ -265,7 +276,7 @@ Kelime listesi koddan bağımsız bir dizi olarak tutulacağı için daha sonra 
 ### Aşama 2 — İlk oynanabilir ekran
 
 - Açıklama kartı, üç kutu ve oyun içi klavyeyi oluştur.
-- Harf girişi, silme ve son kutuda otomatik tahmin gönderme akışını bağla.
+- Harf girişi, silme ve **Cevapla** ile tahmin gönderme akışını bağla.
 - Doğru/yanlış durumlarını göster.
 - Yanlış cevapta kelimeyi kapatıp doğru cevabı göster; aynı kelimede tekrar tahmine izin verme.
 - 2 dakikalık geri sayım ve süre sonu özetini ekle.
@@ -290,6 +301,7 @@ Kelime listesi koddan bağımsız bir dizi olarak tutulacağı için daha sonra 
 - Kategori dağılımını dengeli hâle getir.
 - Tekrar önleme algoritmasını tamamla.
 - Puan ve harf açma maliyetlerini gerçek kullanıcılarla test et.
+- 10 bölümün her biri için 10 kelimelik grupları ve zorluk artışını doğrula.
 - İlk kullanım öğreticisini ekle.
 
 Çıkış ölçütü: Yeni kullanıcı yardım almadan bir harf açabilmeli, kelime girebilmeli ve sonraki tura geçebilmelidir.
@@ -318,12 +330,15 @@ Kelime listesi koddan bağımsız bir dizi olarak tutulacağı için daha sonra 
 - Açılmış harf tekrar açılmaz.
 - Animasyon sırasında düğmeler ikinci işlem başlatmaz.
 - Eksik uzunlukta tahmin gönderilemez.
-- Son harf tamamlandığında tahmin yalnızca bir kez otomatik gönderilir.
+- Tahmin yalnızca etkin **Cevapla** düğmesine basıldığında bir kez gönderilir.
 - Yanlış tahminden sonra aynı kelime yeniden düzenlenemez veya tekrar gönderilemez.
 - Sayaç 2:00'dan 0:00'a iner; süre dolunca klavye ve harf açma işlemleri kilitlenir.
 - Doğru kelime yalnızca boşluk ve harf büyüklüğü farkıyla yanlış sayılmaz.
 - Yanlış cevap puanı sıfırın altına indirmez.
 - Son kelimeler hemen tekrar seçilmez.
+- Her bölüm tam olarak 10 farklı kelime sunar.
+- Bölüm 10'a kadar zorluk havuzları kademeli biçimde ilerler.
+- Aktif bölüm ve bölüm içindeki kelime sırası uygulamadan çıkıp dönünce korunur; tur puanı her yeni turda sıfırlanır.
 - Moddan çıkıp dönünce kayıt bozulmaz.
 - Küçük telefon, tablet, yatay ekran ve web görünümü kontrol edilir.
 - Ekran okuyucu kutuları “Birinci harf kapalı” veya “İkinci harf Ö” biçiminde okuyabilir.
@@ -332,15 +347,19 @@ Kelime listesi koddan bağımsız bir dizi olarak tutulacağı için daha sonra 
 
 - Uygulamada Kelime Çarkı moduna girilebilir ve geri çıkılabilir.
 - Üstte sade Türkçe açıklama gösterilir.
-- Üç harfli cevap için üç ayrı kutu oluşturulur.
+- Cevabın harf sayısı kadar kutu dinamik olarak oluşturulur.
 - Harf Aç eyleminde kapalı kutular döner ve yalnızca bir doğru harf yerinde açılır.
-- Oyuncu ekrandaki Türkçe klavyeyle üç harfli tahmin girebilir.
-- Son harf girildiğinde cevap otomatik kontrol edilir.
+- Oyuncu ekrandaki Türkçe klavyeyle aktif bölümün kelimesini girebilir.
+- Son harf girildiğinde cevap otomatik gönderilmez; silme ve düzeltme kullanılabilir.
 - Doğru ve yanlış tahmin açık biçimde ayrılır.
 - Yanlış tahminde doğru cevap gösterilir ve aynı kelime için yeni hak verilmez.
 - Doğru cevap puanlanır ve sonraki kelimeye geçilir.
 - Her harf açma işlemi 100 puan düşürür.
 - Oyun 2 dakikalık oturum sonunda durur ve tur özeti gösterir.
+- Oyun 10 bölümden oluşur; her bölümde 10 farklı kelime vardır.
+- Bölümler alanında tamamlanan, aktif ve kilitli bölümler görülebilir.
+- Tur toplam puanı oyun ekranında her zaman görülebilir ve yeni turda sıfırlanır.
+- Doğru cevapta kazanılan tur puanı yukarı hareket ederek toplam puan alanına eklenir.
 - Üç harfli kelimede üçüncü harf otomatik açılmaz.
 - En az 40 doğrulanmış kelime bulunur.
 - İlerleme diğer oyun modlarından ayrı kaydedilir.
@@ -350,11 +369,13 @@ Kelime listesi koddan bağımsız bir dizi olarak tutulacağı için daha sonra 
 
 1. Harf açmak jeton kullanmaz; açılan her harf mevcut kelime puanından 100 puan düşürür.
 2. Üç can sistemi veya sınırsız tekrar yoktur. Her kelime için tek tam tahmin hakkı vardır.
-3. Son harf girildiğinde cevap otomatik kontrol edilir; ayrı tahmin kutusu ve **Tahmin Et** düğmesi yoktur.
+3. Son harf girildiğinde **Cevapla** düğmesi etkinleşir; oyuncu gönderene kadar harflerini düzenleyebilir.
 4. Doğru veya yanlış sonuçtan sonra sıradaki kelimeye **Sonraki Kelime** düğmesiyle geçilir.
 5. Her oturum 2 dakika sürer; süre dolunca tur özeti gösterilir.
 6. Kelime kategorisi açıklamanın üstünde gösterilir.
 7. Modun adı **Kelime Çarkı**dır.
+8. Ana ilerleme 10 bölümden oluşur; her bölüm 10 kelimedir ve zorluk bölüm numarasıyla artar.
+9. Tur toplam puanı oyun ekranında ayrı bir alanda gösterilir ve her yeni turda 0'dan başlar.
 
 ## 15. Önerilen ilk geliştirme görevi
 

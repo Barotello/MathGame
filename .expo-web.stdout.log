@@ -1,0 +1,841 @@
+
+> hedef-sayi@1.0.0 web
+> expo start --web --port 8081
+
+Starting project at C:\Users\user\OneDrive\Desktop\MathGame
+[31m[7m[1m ERROR [22m[27m[39m An unknown error occurred while installing React Native DevTools. Details:
+
+spawn EPERM
+Starting Metro Bundler
+
+Waiting on http://localhost:8081
+
+Logs for your project will appear below.
+Web Bundled 5355ms index.ts (402 modules)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  WARN  "shadow*" style props are deprecated. Use "boxShadow".
+Web  WARN  "textShadow*" style props are deprecated. Use "textShadow".
+Web  LOG  Running application "main" with appParams:
+ {"hydrate": undefined, "rootTag": "#root"} 
+Development-level warnings: ON.
+Performance optimizations: OFF.
+Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
+Web  WARN  Animated: `useNativeDriver` is not supported because the native animated module is missing. Falling back to JS-based animation. To resolve this, add `RCTAnimation` module to this app, or remove `useNativeDriver`. Make sure to run `bundle exec pod install` first. Read more about autolinking: https://github.com/react-native-community/cli/blob/master/docs/autolinking.md
+[31m[7m[1m ERROR [22m[27m[39m SyntaxError: C:\Users\user\OneDrive\Desktop\MathGame\src\components\SettingsModal.tsx: Unexpected token (110:12)
+
+  108 |               <ThemePicker onSelect={onThemeChange} themeId={themeId} />
+  109 |             ) : (
+> 110 |             ) : screen === 'leaderboard' ? (
+      |             ^
+  111 |               <LeaderboardPanel levelRecords={levelRecords} paper={paper} playerName={playerName} />
+  112 |               <>
+  113 |                 <View style={styles.mainModesSection}>
+    at constructor (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:365:19)
+    at TypeScriptParserMixin.raise (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6616:19)
+    at TypeScriptParserMixin.unexpected (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6636:16)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11709:12)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9803:20)
+    at TypeScriptParserMixin.parseConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10910:29)
+    at TypeScriptParserMixin.parseConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9620:18)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10902:17)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9803:20)
+    at TypeScriptParserMixin.parseExpressionBase (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10801:23)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10797:39
+    at TypeScriptParserMixin.allowInAnd (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12443:12)
+    at TypeScriptParserMixin.parseExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10797:17)
+    at TypeScriptParserMixin.jsxParseExpressionContainer (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4644:31)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4723:36)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElement (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4761:17)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4771:19)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9792:39
+    at TypeScriptParserMixin.tryParse (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6924:20)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9792:18)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10817:39
+    at TypeScriptParserMixin.allowInAnd (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12443:12)
+    at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10817:17)
+    at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12510:17)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11692:28)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+Web  ERROR  [TransformError: SyntaxError: C:\Users\user\OneDrive\Desktop\MathGame\src\components\SettingsModal.tsx: Unexpected token (110:12)
+
+  108 |               <ThemePicker onSelect={onThemeChange} themeId={themeId} />
+  109 |             ) : (
+> 110 |             ) : screen === 'leaderboard' ? (
+      |             ^
+  111 |               <LeaderboardPanel levelRecords={levelRecords} paper={paper} playerName={playerName} />
+  112 |               <>
+  113 |                 <View style={styles.mainModesSection}>]
+[31m[7m[1m ERROR [22m[27m[39m SyntaxError: C:\Users\user\OneDrive\Desktop\MathGame\src\components\SettingsModal.tsx: Unexpected token (110:12)
+
+  108 |               <ThemePicker onSelect={onThemeChange} themeId={themeId} />
+  109 |             ) : (
+> 110 |             ) : screen === 'leaderboard' ? (
+      |             ^
+  111 |               <LeaderboardPanel levelRecords={levelRecords} paper={paper} playerName={playerName} />
+  112 |               <>
+  113 |                 <View style={styles.mainModesSection}>
+    at constructor (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:365:19)
+    at TypeScriptParserMixin.raise (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6616:19)
+    at TypeScriptParserMixin.unexpected (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6636:16)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11709:12)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9803:20)
+    at TypeScriptParserMixin.parseConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10910:29)
+    at TypeScriptParserMixin.parseConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9620:18)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10902:17)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9803:20)
+    at TypeScriptParserMixin.parseExpressionBase (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10801:23)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10797:39
+    at TypeScriptParserMixin.allowInAnd (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12443:12)
+    at TypeScriptParserMixin.parseExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10797:17)
+    at TypeScriptParserMixin.jsxParseExpressionContainer (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4644:31)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4723:36)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElement (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4761:17)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4771:19)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9792:39
+    at TypeScriptParserMixin.tryParse (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6924:20)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9792:18)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10817:39
+    at TypeScriptParserMixin.allowInAnd (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12443:12)
+    at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10817:17)
+    at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12510:17)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11692:28)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+Web  ERROR  [TransformError: SyntaxError: C:\Users\user\OneDrive\Desktop\MathGame\src\components\SettingsModal.tsx: Unexpected token (110:12)
+
+  108 |               <ThemePicker onSelect={onThemeChange} themeId={themeId} />
+  109 |             ) : (
+> 110 |             ) : screen === 'leaderboard' ? (
+      |             ^
+  111 |               <LeaderboardPanel levelRecords={levelRecords} paper={paper} playerName={playerName} />
+  112 |               <>
+  113 |                 <View style={styles.mainModesSection}>]
+[31m[7m[1m ERROR [22m[27m[39m SyntaxError: C:\Users\user\OneDrive\Desktop\MathGame\src\components\SettingsModal.tsx: Unexpected token (110:12)
+
+  108 |               <ThemePicker onSelect={onThemeChange} themeId={themeId} />
+  109 |             ) : (
+> 110 |             ) : screen === 'leaderboard' ? (
+      |             ^
+  111 |               <LeaderboardPanel levelRecords={levelRecords} paper={paper} playerName={playerName} />
+  112 |               <>
+  113 |                 <View style={styles.mainModesSection}>
+    at constructor (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:365:19)
+    at TypeScriptParserMixin.raise (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6616:19)
+    at TypeScriptParserMixin.unexpected (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6636:16)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11709:12)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9803:20)
+    at TypeScriptParserMixin.parseConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10910:29)
+    at TypeScriptParserMixin.parseConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9620:18)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10902:17)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9803:20)
+    at TypeScriptParserMixin.parseExpressionBase (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10801:23)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10797:39
+    at TypeScriptParserMixin.allowInAnd (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12443:12)
+    at TypeScriptParserMixin.parseExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10797:17)
+    at TypeScriptParserMixin.jsxParseExpressionContainer (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4644:31)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4723:36)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElement (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4761:17)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4771:19)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9792:39
+    at TypeScriptParserMixin.tryParse (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6924:20)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9792:18)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10817:39
+    at TypeScriptParserMixin.allowInAnd (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12443:12)
+    at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10817:17)
+    at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12510:17)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11692:28)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+Web  ERROR  [TransformError: SyntaxError: C:\Users\user\OneDrive\Desktop\MathGame\src\components\SettingsModal.tsx: Unexpected token (110:12)
+
+  108 |               <ThemePicker onSelect={onThemeChange} themeId={themeId} />
+  109 |             ) : (
+> 110 |             ) : screen === 'leaderboard' ? (
+      |             ^
+  111 |               <LeaderboardPanel levelRecords={levelRecords} paper={paper} playerName={playerName} />
+  112 |               <>
+  113 |                 <View style={styles.mainModesSection}>]
+[31m[7m[1m ERROR [22m[27m[39m SyntaxError: C:\Users\user\OneDrive\Desktop\MathGame\src\components\SettingsModal.tsx: Unexpected token (110:12)
+
+  108 |               <ThemePicker onSelect={onThemeChange} themeId={themeId} />
+  109 |             ) : (
+> 110 |             ) : screen === 'leaderboard' ? (
+      |             ^
+  111 |               <LeaderboardPanel levelRecords={levelRecords} paper={paper} playerName={playerName} />
+  112 |               <>
+  113 |                 <View style={styles.mainModesSection}>
+    at constructor (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:365:19)
+    at TypeScriptParserMixin.raise (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6616:19)
+    at TypeScriptParserMixin.unexpected (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6636:16)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11709:12)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9803:20)
+    at TypeScriptParserMixin.parseConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10910:29)
+    at TypeScriptParserMixin.parseConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9620:18)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10902:17)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9803:20)
+    at TypeScriptParserMixin.parseExpressionBase (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10801:23)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10797:39
+    at TypeScriptParserMixin.allowInAnd (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12443:12)
+    at TypeScriptParserMixin.parseExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10797:17)
+    at TypeScriptParserMixin.jsxParseExpressionContainer (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4644:31)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4723:36)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElement (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4761:17)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4771:19)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9792:39
+    at TypeScriptParserMixin.tryParse (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6924:20)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9792:18)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10817:39
+    at TypeScriptParserMixin.allowInAnd (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12443:12)
+    at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10817:17)
+    at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12510:17)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11692:28)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+Web  ERROR  [TransformError: SyntaxError: C:\Users\user\OneDrive\Desktop\MathGame\src\components\SettingsModal.tsx: Unexpected token (110:12)
+
+  108 |               <ThemePicker onSelect={onThemeChange} themeId={themeId} />
+  109 |             ) : (
+> 110 |             ) : screen === 'leaderboard' ? (
+      |             ^
+  111 |               <LeaderboardPanel levelRecords={levelRecords} paper={paper} playerName={playerName} />
+  112 |               <>
+  113 |                 <View style={styles.mainModesSection}>]
+[31m[7m[1m ERROR [22m[27m[39m SyntaxError: C:\Users\user\OneDrive\Desktop\MathGame\src\components\SettingsModal.tsx: Unexpected token (110:12)
+
+  108 |               <ThemePicker onSelect={onThemeChange} themeId={themeId} />
+  109 |             ) : (
+> 110 |             ) : screen === 'leaderboard' ? (
+      |             ^
+  111 |               <LeaderboardPanel levelRecords={levelRecords} paper={paper} playerName={playerName} />
+  112 |               <>
+  113 |                 <View style={styles.mainModesSection}>
+    at constructor (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:365:19)
+    at TypeScriptParserMixin.raise (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6616:19)
+    at TypeScriptParserMixin.unexpected (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6636:16)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11709:12)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9803:20)
+    at TypeScriptParserMixin.parseConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10910:29)
+    at TypeScriptParserMixin.parseConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9620:18)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10902:17)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9803:20)
+    at TypeScriptParserMixin.parseExpressionBase (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10801:23)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10797:39
+    at TypeScriptParserMixin.allowInAnd (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12443:12)
+    at TypeScriptParserMixin.parseExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10797:17)
+    at TypeScriptParserMixin.jsxParseExpressionContainer (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4644:31)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4723:36)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElement (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4761:17)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4771:19)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9792:39
+    at TypeScriptParserMixin.tryParse (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6924:20)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9792:18)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10817:39
+    at TypeScriptParserMixin.allowInAnd (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12443:12)
+    at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10817:17)
+    at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12510:17)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11692:28)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+Web  ERROR  [TransformError: SyntaxError: C:\Users\user\OneDrive\Desktop\MathGame\src\components\SettingsModal.tsx: Unexpected token (110:12)
+
+  108 |               <ThemePicker onSelect={onThemeChange} themeId={themeId} />
+  109 |             ) : (
+> 110 |             ) : screen === 'leaderboard' ? (
+      |             ^
+  111 |               <LeaderboardPanel levelRecords={levelRecords} paper={paper} playerName={playerName} />
+  112 |               <>
+  113 |                 <View style={styles.mainModesSection}>]
+[31m[7m[1m ERROR [22m[27m[39m SyntaxError: C:\Users\user\OneDrive\Desktop\MathGame\src\components\SettingsModal.tsx: Unexpected token (110:12)
+
+  108 |               <ThemePicker onSelect={onThemeChange} themeId={themeId} />
+  109 |             ) : (
+> 110 |             ) : screen === 'leaderboard' ? (
+      |             ^
+  111 |               <LeaderboardPanel levelRecords={levelRecords} paper={paper} playerName={playerName} />
+  112 |               <>
+  113 |                 <View style={styles.mainModesSection}>
+    at constructor (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:365:19)
+    at TypeScriptParserMixin.raise (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6616:19)
+    at TypeScriptParserMixin.unexpected (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6636:16)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11709:12)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9803:20)
+    at TypeScriptParserMixin.parseConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10910:29)
+    at TypeScriptParserMixin.parseConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9620:18)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10902:17)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9803:20)
+    at TypeScriptParserMixin.parseExpressionBase (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10801:23)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10797:39
+    at TypeScriptParserMixin.allowInAnd (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12443:12)
+    at TypeScriptParserMixin.parseExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10797:17)
+    at TypeScriptParserMixin.jsxParseExpressionContainer (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4644:31)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4723:36)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElement (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4761:17)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4771:19)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9792:39
+    at TypeScriptParserMixin.tryParse (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6924:20)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9792:18)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10817:39
+    at TypeScriptParserMixin.allowInAnd (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12443:12)
+    at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10817:17)
+    at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12510:17)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11692:28)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+Web  ERROR  [TransformError: SyntaxError: C:\Users\user\OneDrive\Desktop\MathGame\src\components\SettingsModal.tsx: Unexpected token (110:12)
+
+  108 |               <ThemePicker onSelect={onThemeChange} themeId={themeId} />
+  109 |             ) : (
+> 110 |             ) : screen === 'leaderboard' ? (
+      |             ^
+  111 |               <LeaderboardPanel levelRecords={levelRecords} paper={paper} playerName={playerName} />
+  112 |               <>
+  113 |                 <View style={styles.mainModesSection}>]
+[31m[7m[1m ERROR [22m[27m[39m SyntaxError: C:\Users\user\OneDrive\Desktop\MathGame\src\components\SettingsModal.tsx: Unexpected token (110:12)
+
+  108 |               <ThemePicker onSelect={onThemeChange} themeId={themeId} />
+  109 |             ) : (
+> 110 |             ) : screen === 'leaderboard' ? (
+      |             ^
+  111 |               <LeaderboardPanel levelRecords={levelRecords} paper={paper} playerName={playerName} />
+  112 |               <>
+  113 |                 <View style={styles.mainModesSection}>
+    at constructor (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:365:19)
+    at TypeScriptParserMixin.raise (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6616:19)
+    at TypeScriptParserMixin.unexpected (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6636:16)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11709:12)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9803:20)
+    at TypeScriptParserMixin.parseConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10910:29)
+    at TypeScriptParserMixin.parseConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9620:18)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10902:17)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9803:20)
+    at TypeScriptParserMixin.parseExpressionBase (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10801:23)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10797:39
+    at TypeScriptParserMixin.allowInAnd (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12443:12)
+    at TypeScriptParserMixin.parseExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10797:17)
+    at TypeScriptParserMixin.jsxParseExpressionContainer (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4644:31)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4723:36)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElement (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4761:17)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4771:19)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9792:39
+    at TypeScriptParserMixin.tryParse (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6924:20)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9792:18)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10817:39
+    at TypeScriptParserMixin.allowInAnd (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12443:12)
+    at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10817:17)
+    at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12510:17)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11692:28)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+Web  ERROR  [TransformError: SyntaxError: C:\Users\user\OneDrive\Desktop\MathGame\src\components\SettingsModal.tsx: Unexpected token (110:12)
+
+  108 |               <ThemePicker onSelect={onThemeChange} themeId={themeId} />
+  109 |             ) : (
+> 110 |             ) : screen === 'leaderboard' ? (
+      |             ^
+  111 |               <LeaderboardPanel levelRecords={levelRecords} paper={paper} playerName={playerName} />
+  112 |               <>
+  113 |                 <View style={styles.mainModesSection}>]
+[31m[7m[1m ERROR [22m[27m[39m SyntaxError: C:\Users\user\OneDrive\Desktop\MathGame\src\components\SettingsModal.tsx: Unexpected token (110:12)
+
+  108 |               <ThemePicker onSelect={onThemeChange} themeId={themeId} />
+  109 |             ) : (
+> 110 |             ) : screen === 'leaderboard' ? (
+      |             ^
+  111 |               <LeaderboardPanel levelRecords={levelRecords} paper={paper} playerName={playerName} />
+  112 |               <>
+  113 |                 <View style={styles.mainModesSection}>
+    at constructor (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:365:19)
+    at TypeScriptParserMixin.raise (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6616:19)
+    at TypeScriptParserMixin.unexpected (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6636:16)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11709:12)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9803:20)
+    at TypeScriptParserMixin.parseConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10910:29)
+    at TypeScriptParserMixin.parseConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9620:18)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10902:17)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9803:20)
+    at TypeScriptParserMixin.parseExpressionBase (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10801:23)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10797:39
+    at TypeScriptParserMixin.allowInAnd (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12443:12)
+    at TypeScriptParserMixin.parseExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10797:17)
+    at TypeScriptParserMixin.jsxParseExpressionContainer (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4644:31)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4723:36)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElement (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4761:17)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4771:19)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9792:39
+    at TypeScriptParserMixin.tryParse (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6924:20)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9792:18)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10817:39
+    at TypeScriptParserMixin.allowInAnd (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12443:12)
+    at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10817:17)
+    at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12510:17)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11692:28)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+Web  ERROR  [TransformError: SyntaxError: C:\Users\user\OneDrive\Desktop\MathGame\src\components\SettingsModal.tsx: Unexpected token (110:12)
+
+  108 |               <ThemePicker onSelect={onThemeChange} themeId={themeId} />
+  109 |             ) : (
+> 110 |             ) : screen === 'leaderboard' ? (
+      |             ^
+  111 |               <LeaderboardPanel levelRecords={levelRecords} paper={paper} playerName={playerName} />
+  112 |               <>
+  113 |                 <View style={styles.mainModesSection}>]
+[31m[7m[1m ERROR [22m[27m[39m SyntaxError: C:\Users\user\OneDrive\Desktop\MathGame\src\components\SettingsModal.tsx: Unexpected token (110:12)
+
+  108 |               <ThemePicker onSelect={onThemeChange} themeId={themeId} />
+  109 |             ) : (
+> 110 |             ) : screen === 'leaderboard' ? (
+      |             ^
+  111 |               <LeaderboardPanel levelRecords={levelRecords} paper={paper} playerName={playerName} />
+  112 |               <>
+  113 |                 <View style={styles.mainModesSection}>
+    at constructor (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:365:19)
+    at TypeScriptParserMixin.raise (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6616:19)
+    at TypeScriptParserMixin.unexpected (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6636:16)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11709:12)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9803:20)
+    at TypeScriptParserMixin.parseConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10910:29)
+    at TypeScriptParserMixin.parseConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9620:18)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10902:17)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9803:20)
+    at TypeScriptParserMixin.parseExpressionBase (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10801:23)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10797:39
+    at TypeScriptParserMixin.allowInAnd (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12443:12)
+    at TypeScriptParserMixin.parseExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10797:17)
+    at TypeScriptParserMixin.jsxParseExpressionContainer (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4644:31)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4723:36)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElement (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4761:17)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4771:19)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9792:39
+    at TypeScriptParserMixin.tryParse (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6924:20)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9792:18)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10817:39
+    at TypeScriptParserMixin.allowInAnd (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12443:12)
+    at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10817:17)
+    at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12510:17)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11692:28)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+Web  ERROR  [TransformError: SyntaxError: C:\Users\user\OneDrive\Desktop\MathGame\src\components\SettingsModal.tsx: Unexpected token (110:12)
+
+  108 |               <ThemePicker onSelect={onThemeChange} themeId={themeId} />
+  109 |             ) : (
+> 110 |             ) : screen === 'leaderboard' ? (
+      |             ^
+  111 |               <LeaderboardPanel levelRecords={levelRecords} paper={paper} playerName={playerName} />
+  112 |               <>
+  113 |                 <View style={styles.mainModesSection}>]
+[31m[7m[1m ERROR [22m[27m[39m SyntaxError: C:\Users\user\OneDrive\Desktop\MathGame\src\components\SettingsModal.tsx: Unexpected token (110:12)
+
+  108 |               <ThemePicker onSelect={onThemeChange} themeId={themeId} />
+  109 |             ) : (
+> 110 |             ) : screen === 'leaderboard' ? (
+      |             ^
+  111 |               <LeaderboardPanel levelRecords={levelRecords} paper={paper} playerName={playerName} />
+  112 |               <>
+  113 |                 <View style={styles.mainModesSection}>
+    at constructor (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:365:19)
+    at TypeScriptParserMixin.raise (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6616:19)
+    at TypeScriptParserMixin.unexpected (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6636:16)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11709:12)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9803:20)
+    at TypeScriptParserMixin.parseConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10910:29)
+    at TypeScriptParserMixin.parseConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9620:18)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10902:17)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9803:20)
+    at TypeScriptParserMixin.parseExpressionBase (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10801:23)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10797:39
+    at TypeScriptParserMixin.allowInAnd (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12443:12)
+    at TypeScriptParserMixin.parseExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10797:17)
+    at TypeScriptParserMixin.jsxParseExpressionContainer (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4644:31)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4723:36)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElement (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4761:17)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4771:19)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9792:39
+    at TypeScriptParserMixin.tryParse (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6924:20)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9792:18)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10817:39
+    at TypeScriptParserMixin.allowInAnd (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12443:12)
+    at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10817:17)
+    at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12510:17)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11692:28)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+Web  ERROR  [TransformError: SyntaxError: C:\Users\user\OneDrive\Desktop\MathGame\src\components\SettingsModal.tsx: Unexpected token (110:12)
+
+  108 |               <ThemePicker onSelect={onThemeChange} themeId={themeId} />
+  109 |             ) : (
+> 110 |             ) : screen === 'leaderboard' ? (
+      |             ^
+  111 |               <LeaderboardPanel levelRecords={levelRecords} paper={paper} playerName={playerName} />
+  112 |               <>
+  113 |                 <View style={styles.mainModesSection}>]
+[31m[7m[1m ERROR [22m[27m[39m SyntaxError: C:\Users\user\OneDrive\Desktop\MathGame\src\components\SettingsModal.tsx: Unexpected token (110:12)
+
+  108 |               <ThemePicker onSelect={onThemeChange} themeId={themeId} />
+  109 |             ) : (
+> 110 |             ) : screen === 'leaderboard' ? (
+      |             ^
+  111 |               <LeaderboardPanel levelRecords={levelRecords} paper={paper} playerName={playerName} />
+  112 |               <>
+  113 |                 <View style={styles.mainModesSection}>
+    at constructor (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:365:19)
+    at TypeScriptParserMixin.raise (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6616:19)
+    at TypeScriptParserMixin.unexpected (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6636:16)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11709:12)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9803:20)
+    at TypeScriptParserMixin.parseConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10910:29)
+    at TypeScriptParserMixin.parseConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9620:18)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10902:17)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9803:20)
+    at TypeScriptParserMixin.parseExpressionBase (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10801:23)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10797:39
+    at TypeScriptParserMixin.allowInAnd (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12443:12)
+    at TypeScriptParserMixin.parseExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10797:17)
+    at TypeScriptParserMixin.jsxParseExpressionContainer (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4644:31)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4723:36)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElement (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4761:17)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4771:19)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9792:39
+    at TypeScriptParserMixin.tryParse (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6924:20)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9792:18)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10817:39
+    at TypeScriptParserMixin.allowInAnd (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12443:12)
+    at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10817:17)
+    at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12510:17)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11692:28)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+Web  ERROR  [TransformError: SyntaxError: C:\Users\user\OneDrive\Desktop\MathGame\src\components\SettingsModal.tsx: Unexpected token (110:12)
+
+  108 |               <ThemePicker onSelect={onThemeChange} themeId={themeId} />
+  109 |             ) : (
+> 110 |             ) : screen === 'leaderboard' ? (
+      |             ^
+  111 |               <LeaderboardPanel levelRecords={levelRecords} paper={paper} playerName={playerName} />
+  112 |               <>
+  113 |                 <View style={styles.mainModesSection}>]
+Web Bundling failed 11ms index.ts (1 module)
+[31m[7m[1m ERROR [22m[27m[39m SyntaxError: C:\Users\user\OneDrive\Desktop\MathGame\src\components\SettingsModal.tsx: Unexpected token (110:12)
+
+  108 |               <ThemePicker onSelect={onThemeChange} themeId={themeId} />
+  109 |             ) : (
+> 110 |             ) : screen === 'leaderboard' ? (
+      |             ^
+  111 |               <LeaderboardPanel levelRecords={levelRecords} paper={paper} playerName={playerName} />
+  112 |               <>
+  113 |                 <View style={styles.mainModesSection}>
+    at constructor (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:365:19)
+    at TypeScriptParserMixin.raise (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6616:19)
+    at TypeScriptParserMixin.unexpected (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6636:16)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11709:12)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9803:20)
+    at TypeScriptParserMixin.parseConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10910:29)
+    at TypeScriptParserMixin.parseConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9620:18)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10902:17)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9803:20)
+    at TypeScriptParserMixin.parseExpressionBase (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10801:23)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10797:39
+    at TypeScriptParserMixin.allowInAnd (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12443:12)
+    at TypeScriptParserMixin.parseExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10797:17)
+    at TypeScriptParserMixin.jsxParseExpressionContainer (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4644:31)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4723:36)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElementAt (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4710:32)
+    at TypeScriptParserMixin.jsxParseElement (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4761:17)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4771:19)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+    at TypeScriptParserMixin.parseUpdate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11083:21)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11063:23)
+    at TypeScriptParserMixin.parseMaybeUnary (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9854:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10916:61)
+    at TypeScriptParserMixin.parseExprOps (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10921:23)
+    at TypeScriptParserMixin.parseMaybeConditional (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10898:23)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10848:21)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9792:39
+    at TypeScriptParserMixin.tryParse (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:6924:20)
+    at TypeScriptParserMixin.parseMaybeAssign (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:9792:18)
+    at C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10817:39
+    at TypeScriptParserMixin.allowInAnd (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12443:12)
+    at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:10817:17)
+    at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:12510:17)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11692:28)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11348:23)
+    at TypeScriptParserMixin.parseExprAtom (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:4776:20)
+    at TypeScriptParserMixin.parseExprSubscripts (C:\Users\user\OneDrive\Desktop\MathGame\node_modules\@babel\parser\lib\index.js:11098:23)
+Web Bundled 1019ms index.ts (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  WARN  "shadow*" style props are deprecated. Use "boxShadow".
+Web  WARN  "textShadow*" style props are deprecated. Use "textShadow".
+Web  LOG  Running application "main" with appParams:
+ {"hydrate": undefined, "rootTag": "#root"} 
+Development-level warnings: ON.
+Performance optimizations: OFF.
+Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
+Web  WARN  Animated: `useNativeDriver` is not supported because the native animated module is missing. Falling back to JS-based animation. To resolve this, add `RCTAnimation` module to this app, or remove `useNativeDriver`. Make sure to run `bundle exec pod install` first. Read more about autolinking: https://github.com/react-native-community/cli/blob/master/docs/autolinking.md

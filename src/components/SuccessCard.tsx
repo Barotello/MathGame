@@ -194,7 +194,7 @@ export function SuccessCard({
           </Text>
           <Text style={[styles.bonusDot, paper && styles.mutedPaper]}>•</Text>
           <Text style={[styles.bonusText, paper && styles.bonusTextPaper]}>
-            İpucusuz +{summary.hintBonus}
+            İpucu bonusu +{summary.hintBonus}
           </Text>
         </View>
 

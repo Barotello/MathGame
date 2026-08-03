@@ -127,6 +127,7 @@ export function PlayerNameModal({ onSubmit, paper = false, visible }: Props) {
             </View>
 
             <Pressable
+              accessibilityLabel="Oyuna Başla"
               accessibilityRole="button"
               disabled={!isValid}
               onPress={submit}
@@ -137,10 +138,19 @@ export function PlayerNameModal({ onSubmit, paper = false, visible }: Props) {
                 pressed && isValid && styles.buttonPressed,
               ]}
             >
-              <Text style={[styles.buttonText, paper && styles.buttonTextPaper]}>
-                Oyuna Başla
-              </Text>
-              <Text style={[styles.buttonArrow, paper && styles.buttonTextPaper]}>›</Text>
+              <View pointerEvents="none" style={styles.buttonLabelContainer}>
+                <Text style={[styles.buttonText, paper && styles.buttonTextPaper]}>
+                  Oyuna Başla
+                </Text>
+              </View>
+              <View
+                accessibilityElementsHidden
+                importantForAccessibility="no-hide-descendants"
+                pointerEvents="none"
+                style={styles.buttonArrowContainer}
+              >
+                <Text style={[styles.buttonArrow, paper && styles.buttonTextPaper]}>›</Text>
+              </View>
             </Pressable>
           </BlurView>
         </Animated.View>
@@ -295,9 +305,23 @@ const styles = StyleSheet.create({
   buttonTextPaper: {
     color: '#FFFDF8',
   },
-  buttonArrow: {
+  buttonLabelContainer: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonArrowContainer: {
     position: 'absolute',
     right: 18,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+  },
+  buttonArrow: {
     color: '#503307',
     fontSize: 26,
     lineHeight: 28,

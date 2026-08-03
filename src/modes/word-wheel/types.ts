@@ -26,10 +26,15 @@ export type WordRoundStatus =
   | 'finished';
 
 export type WordWheelProgress = {
-  schemaVersion: 1;
+  schemaVersion: 2;
   totalSolved: number;
+  totalPlayed: number;
   totalScore: number;
   bestRoundScore: number;
   solvedWordIds: string[];
   recentWordIds: string[];
+  currentLevel: number;
+  levelWordIndex: number;
+  currentLevelWordIds: string[];
+  completedLevels: number[];
 };

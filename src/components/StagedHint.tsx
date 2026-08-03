@@ -6,13 +6,24 @@ import { formatMathValue } from '../game/mathValue';
 import type { Level } from '../types/game';
 
 type Props = {
+  canAfford?: boolean;
+  compact?: boolean;
   level: Level;
   onReveal: () => void;
   stage: number;
   paper?: boolean;
+  scorePenalty?: number;
 };
 
-export function StagedHint({ level, onReveal, stage, paper = false }: Props) {
+export function StagedHint({
+  canAfford = true,
+  compact = false,
+  level,
+  onReveal,
+  stage,
+  paper = false,
+  scorePenalty = 0,
+}: Props) {
   const solutionCells = level.knownSolution.cellIds.map((cellId) =>
     level.cells.find((cell) => cell.id === cellId),
   );
@@ -25,7 +36,7 @@ export function StagedHint({ level, onReveal, stage, paper = false }: Props) {
     <BlurView
       intensity={paper ? 12 : 30}
       tint={paper ? "light" : "dark"}
-      style={[styles.card, paper && styles.cardPaper]}
+      style={[styles.card, compact && styles.cardCompact, paper && styles.cardPaper]}
     >
       <View style={styles.copy}>
         <Text style={[styles.eyebrow, paper && styles.eyebrowPaper]}>
@@ -35,12 +46,25 @@ export function StagedHint({ level, onReveal, stage, paper = false }: Props) {
       </View>
       {stage < 4 ? (
         <Pressable
-          accessibilityLabel="Sonraki ipucunu aç"
+          accessibilityLabel={
+            canAfford
+              ? `Sonraki ipucunu aç${scorePenalty > 0 ? `, toplam puandan ${scorePenalty} puan düşer` : ''}`
+              : 'Sonraki ipucu için puan yetersiz'
+          }
           accessibilityRole="button"
+          disabled={!canAfford}
           onPress={onReveal}
-          style={({ pressed }) => [styles.button, paper && styles.buttonPaper, pressed && styles.buttonPressed]}
+          style={({ pressed }) => [
+            styles.button,
+            paper && styles.buttonPaper,
+            !canAfford && styles.buttonDisabled,
+            pressed && styles.buttonPressed,
+          ]}
         >
-          <Text style={[styles.buttonText, paper && styles.buttonTextPaper]}>{stage === 0 ? 'İpucu Aç' : 'Devam'}</Text>
+          <Text style={[styles.buttonText, paper && styles.buttonTextPaper]}>
+            {canAfford ? (stage === 0 ? 'İpucu Aç' : 'Devam') : 'Yetersiz Puan'}
+            {canAfford && scorePenalty > 0 ? ` · −${scorePenalty}` : ''}
+          </Text>
         </Pressable>
       ) : null}
     </BlurView>
@@ -93,6 +117,11 @@ const styles = StyleSheet.create({
     elevation: 5,
     boxShadow: '0 7px 20px rgba(74, 68, 63, 0.11)',
   },
+  cardCompact: {
+    marginTop: 10,
+    padding: 12,
+    gap: 8,
+  },
   textPaper: {
     color: '#8C847E',
   },
@@ -139,5 +168,8 @@ const styles = StyleSheet.create({
   buttonPressed: {
     opacity: 0.75,
     transform: [{ scale: 0.97 }],
+  },
+  buttonDisabled: {
+    opacity: 0.45,
   },
 });

@@ -20,7 +20,6 @@ import {
 import { NumberCell } from '../components/NumberCell';
 import { OperatorPopover } from '../components/OperatorPopover';
 import { PlayerNameModal } from '../components/player-name-modal';
-import { MainModeSwitch } from '../components/main-mode-switch';
 import { SettingsModal } from '../components/SettingsModal';
 import { StagedHint } from '../components/StagedHint';
 import { SuccessCard } from '../components/SuccessCard';
@@ -47,7 +46,10 @@ import {
   getOperatorArcLayout,
   getOperatorAtBoardPoint,
 } from '../game/gesture';
-import { useGameProgress } from '../hooks/useGameProgress';
+import {
+  HINT_STAGE_PENALTY,
+  useGameProgress,
+} from '../hooks/useGameProgress';
 import { colors } from '../theme/colors';
 import type {
   NumberCell as NumberCellModel,
@@ -74,6 +76,7 @@ const CHAPTER_BACKGROUNDS = [
   require('../../assets/chapter-10-background.jpg'),
 ] as const;
 const PYTHAGORAS_INTERLUDE = require('../../assets/pythagoras-interlude.png');
+const APP_ICON = require('../../assets/ios-icon-v2.png');
 
 type DragSession = {
   startCell: NumberCellModel;
@@ -94,13 +97,11 @@ type MergeAnimation = {
 
 type Props = {
   openSettingsInitially?: boolean;
-  onOpenWallBreaker: () => void;
   onOpenWordWheel: () => void;
 };
 
 export function GameScreen({
   openSettingsInitially = false,
-  onOpenWallBreaker,
   onOpenWordWheel,
 }: Props) {
   const { height, width } = useWindowDimensions();
@@ -157,6 +158,7 @@ export function GameScreen({
     recordDailyCompletion,
     setLastLevelNumber,
     setPlayerName,
+    spendScore,
     updateSettings,
   } = useGameProgress();
   const {
@@ -165,6 +167,7 @@ export function GameScreen({
     lastDailyCompletedDate,
     levelRecords,
     playerName,
+    scoreSpent,
     settings,
   } = progress;
   const { showHints, themeId } = settings;
@@ -172,7 +175,9 @@ export function GameScreen({
   const isPaperTheme = themeId === 'paper';
 
 
-  const boardSize = Math.min(width - 32, 420);
+  const compactViewport = height < 900;
+  const boardSize = Math.min(width - 32, compactViewport ? 350 : 420);
+  const bottomContentPadding = compactViewport ? 104 : 64;
   const cellSize =
     (boardSize -
       BOARD_PADDING * 2 -
@@ -267,14 +272,13 @@ export function GameScreen({
     return rules;
   }, [level, path.length, selectedCells, steps]);
   const lastCell = path.length > 0 ? cellMap.get(path[path.length - 1]) : null;
-  const totalScore = useMemo(
-    () =>
-      Object.values(levelRecords).reduce(
+  const totalScore = useMemo(() => {
+    const earnedScore = Object.values(levelRecords).reduce(
         (sum, record) => sum + (record.bestScore ?? 0),
         0,
-      ),
-    [levelRecords],
-  );
+      );
+    return Math.max(0, earnedScore - scoreSpent);
+  }, [levelRecords, scoreSpent]);
   const formattedTotalScore = displayedTotalScore.toLocaleString('tr-TR');
   const timeIsLow = secondsRemaining <= 10;
   const canGoNext = !isLastLevel;
@@ -650,6 +654,7 @@ export function GameScreen({
         pathLength: nextPath.length,
         parPathLength: level.parPathLength,
         usedHint,
+        hintStage,
       });
       const addedScore = Math.max(0, summary.score - previousBestScore);
       setCompletionSummary(summary);
@@ -849,6 +854,18 @@ export function GameScreen({
   }
 
   function revealNextHint() {
+    if (totalScore < HINT_STAGE_PENALTY) {
+      setMessage(`İpucu için ${HINT_STAGE_PENALTY} puan gerekiyor.`);
+      if (Platform.OS !== 'web') {
+        Haptics.notificationAsync(
+          Haptics.NotificationFeedbackType.Error,
+        ).catch(() => undefined);
+      }
+      return;
+    }
+
+    spendScore(HINT_STAGE_PENALTY);
+    setDisplayedTotalScore(Math.max(0, totalScore - HINT_STAGE_PENALTY));
     setUsedHint(true);
     setHintStage((stage) => Math.min(4, stage + 1));
     if (Platform.OS !== 'web') {
@@ -920,62 +937,63 @@ export function GameScreen({
 
       <SafeAreaView style={styles.safeArea}>
         <ScrollView
-          contentContainerStyle={styles.content}
+          contentInsetAdjustmentBehavior="automatic"
+          contentContainerStyle={[
+            styles.content,
+            { paddingBottom: bottomContentPadding },
+          ]}
           scrollEnabled={!pendingCell}
+          scrollIndicatorInsets={{ bottom: compactViewport ? 40 : 20 }}
           showsVerticalScrollIndicator={false}
         >
-        <MainModeSwitch
-          activeMode="math"
-          onSelectMath={() => undefined}
-          onSelectTurkish={onOpenWordWheel}
-          paper={isPaperTheme}
-        />
-
-        <View style={styles.header}>
+        <View style={[styles.header, compactViewport && styles.headerCompact]}>
           <View style={styles.headerCopyBlock}>
-            <Text style={[styles.levelTitle, isPaperTheme && styles.textPaper]}>
-              {isDailyMode ? 'Günlük Bulmaca' : `Seviye ${level.number}`}
-            </Text>
-            {playerName ? (
-              <Text style={[styles.playerName, isPaperTheme && styles.playerNamePaper]}>
-                @{playerName}
+            <View style={styles.levelHeadingRow}>
+              <Text style={[styles.levelTitle, isPaperTheme && styles.textPaper]}>
+                {isDailyMode ? 'Günlük Bulmaca' : `Seviye ${level.number}`}
               </Text>
-            ) : null}
+              {!isDailyMode ? (
+                <Animated.View
+                  accessibilityLabel={`Toplam puan ${formattedTotalScore}`}
+                  style={[
+                    styles.totalScorePill,
+                    isPaperTheme && styles.totalScorePillPaper,
+                    {
+                      transform: [
+                        {
+                          scale: scorePillPulse.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [1, 1.1],
+                          }),
+                        },
+                      ],
+                    },
+                  ]}
+                >
+                  <View style={[styles.totalScoreGem, isPaperTheme && styles.totalScoreGemPaper]}>
+                    <Image
+                      accessible={false}
+                      resizeMode="cover"
+                      source={APP_ICON}
+                      style={styles.totalScoreGemImage}
+                    />
+                  </View>
+                  <View>
+                    <Text style={[styles.totalScoreLabel, isPaperTheme && styles.totalScoreLabelPaper]}>
+                      TOPLAM PUAN
+                    </Text>
+                    <Text style={[styles.totalScoreValue, isPaperTheme && styles.totalScoreValuePaper]}>
+                      {formattedTotalScore}
+                    </Text>
+                  </View>
+                </Animated.View>
+              ) : null}
+            </View>
             {isDailyMode ? (
               <Text style={[styles.difficultyText, isPaperTheme && styles.mutedTextPaper]}>
                 {todayDateStr} · 🔥 {dailyStreak ?? 0} Gün
               </Text>
-            ) : (
-              <Animated.View
-                accessibilityLabel={`Toplam puan ${formattedTotalScore}`}
-                style={[
-                  styles.totalScorePill,
-                  isPaperTheme && styles.totalScorePillPaper,
-                  {
-                    transform: [
-                      {
-                        scale: scorePillPulse.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: [1, 1.13],
-                        }),
-                      },
-                    ],
-                  },
-                ]}
-              >
-                <View style={[styles.totalScoreGem, isPaperTheme && styles.totalScoreGemPaper]}>
-                  <Text style={styles.totalScoreGemText}>◆</Text>
-                </View>
-                <View>
-                  <Text style={[styles.totalScoreLabel, isPaperTheme && styles.totalScoreLabelPaper]}>
-                    TOPLAM PUAN
-                  </Text>
-                  <Text style={[styles.totalScoreValue, isPaperTheme && styles.totalScoreValuePaper]}>
-                    {formattedTotalScore}
-                  </Text>
-                </View>
-              </Animated.View>
-            )}
+            ) : null}
           </View>
 
           <View style={styles.headerActions}>
@@ -995,20 +1013,7 @@ export function GameScreen({
                   ✕ Çık
                 </Text>
               </Pressable>
-            ) : (
-              <Pressable
-                accessibilityLabel="Günlük Bulmaca"
-                accessibilityRole="button"
-                onPress={() => setDailyModalOpen(true)}
-                style={({ pressed }) => [
-                  styles.settingsButton,
-                  isPaperTheme && styles.settingsButtonPaper,
-                  pressed && styles.buttonPressed,
-                ]}
-              >
-                <Text style={{ fontSize: 16 }}>🔥</Text>
-              </Pressable>
-            )}
+            ) : null}
 
             <Pressable
               accessibilityLabel="Ayarlar"
@@ -1025,11 +1030,6 @@ export function GameScreen({
           </View>
         </View>
 
-        {level.number === 1 && !completedLevelNumbers.includes(1) && path.length === 0 ? (
-          <GestureTutorialOverlay paper={isPaperTheme} />
-        ) : null}
-
-
         {level.geniusChapter && level.number !== 10 ? (
           <BlurView intensity={isPaperTheme ? 12 : 40} tint={isPaperTheme ? "light" : "dark"} style={[styles.geniusCard, isPaperTheme && styles.panelPaper]}>
             <Text style={styles.geniusEyebrow}>DEHA BÖLÜMÜ</Text>
@@ -1040,7 +1040,15 @@ export function GameScreen({
           </BlurView>
         ) : null}
 
-        <BlurView intensity={isPaperTheme ? 12 : 42} tint={isPaperTheme ? "light" : "dark"} style={[styles.gameStatusCard, isPaperTheme && styles.panelPaper]}>
+        <BlurView
+          intensity={isPaperTheme ? 12 : 42}
+          tint={isPaperTheme ? "light" : "dark"}
+          style={[
+            styles.gameStatusCard,
+            compactViewport && styles.gameStatusCardCompact,
+            isPaperTheme && styles.panelPaper,
+          ]}
+        >
           <View style={styles.statusMetric}>
             <Text style={[styles.statusLabel, isPaperTheme && styles.mutedTextPaper]}>BÖLÜM</Text>
             <Text style={[styles.statusValue, isPaperTheme && styles.textPaper]}>
@@ -1133,6 +1141,10 @@ export function GameScreen({
               ))}
             </View>
           </View>
+        ) : null}
+
+        {path.length === 0 && !won && !lost ? (
+          <GestureTutorialOverlay compact={compactViewport} paper={isPaperTheme} />
         ) : null}
 
         <BlurView
@@ -1240,20 +1252,8 @@ export function GameScreen({
         </BlurView>
 
 
-        {lost ? (
-          <FailCard
-            canUndoMoves={path.length >= 2}
-            failureReason={failureReason}
-            onRetry={() => resetGame()}
-            onUndoTwoMoves={() => {
-              undo();
-              undo();
-            }}
-            onUseHint={() => revealNextHint()}
-            paper={isPaperTheme}
-          />
-        ) : !won ? (
-          <View style={styles.actions}>
+        {!won && !lost ? (
+          <View style={[styles.actions, compactViewport && styles.actionsCompact]}>
             <Pressable
               accessibilityLabel="Son işlemi geri al"
               accessibilityRole="button"
@@ -1304,7 +1304,15 @@ export function GameScreen({
         ) : null}
 
         {showHints && !won && !lost ? (
-          <StagedHint level={level} onReveal={revealNextHint} paper={isPaperTheme} stage={hintStage} />
+          <StagedHint
+            canAfford={totalScore >= HINT_STAGE_PENALTY}
+            compact={compactViewport}
+            level={level}
+            onReveal={revealNextHint}
+            paper={isPaperTheme}
+            scorePenalty={HINT_STAGE_PENALTY}
+            stage={hintStage}
+          />
         ) : null}
         </ScrollView>
       </SafeAreaView>
@@ -1375,6 +1383,32 @@ export function GameScreen({
 
       <Modal
         animationType="fade"
+        onRequestClose={() => resetGame()}
+        presentationStyle="overFullScreen"
+        statusBarTranslucent
+        transparent
+        visible={lost}
+      >
+        <View style={styles.failureOverlay}>
+          <FailCard
+            canUndoMoves={failureReason !== 'timeout' && path.length >= 2}
+            failureReason={failureReason}
+            onRetry={() => resetGame()}
+            onUndoTwoMoves={() => {
+              undo();
+              undo();
+            }}
+            onUseHint={() => {
+              resetGame();
+              revealNextHint();
+            }}
+            paper={isPaperTheme}
+          />
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="fade"
         onRequestClose={
           isDailyMode
             ? exitDailyChallenge
@@ -1410,18 +1444,15 @@ export function GameScreen({
       </Modal>
 
       <SettingsModal
-
+        activeGameMode="math"
         completedLevelNumbers={completedLevelNumbers}
         currentLevelIndex={levelIndex}
 
         levelRecords={levelRecords}
+        playerName={playerName}
 
         onClose={() => setSettingsOpen(false)}
-
-        onOpenWallBreaker={() => {
-          setSettingsOpen(false);
-          onOpenWallBreaker();
-        }}
+        onOpenMath={() => setSettingsOpen(false)}
         onOpenWordWheel={() => {
           setSettingsOpen(false);
           onOpenWordWheel();
@@ -1551,6 +1582,14 @@ const styles = StyleSheet.create({
     paddingVertical: 36,
     backgroundColor: 'rgba(18, 20, 17, 0.58)',
   },
+  failureOverlay: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 18,
+    paddingVertical: 36,
+    backgroundColor: 'rgba(18, 20, 17, 0.58)',
+  },
   screenPaper: {
     backgroundColor: '#F9F6F2',
   },
@@ -1634,7 +1673,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingTop: 12,
-    paddingBottom: 38,
+    paddingBottom: 64,
   },
   safeArea: {
     flex: 1,
@@ -1647,12 +1686,19 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 20,
   },
+  headerCompact: {
+    marginBottom: 12,
+  },
   headerCopyBlock: {
     flexShrink: 1,
     alignItems: 'flex-start',
   },
+  levelHeadingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
   headerActions: {
-    marginTop: 12,
     flexDirection: 'row',
     gap: 8,
   },
@@ -1679,9 +1725,10 @@ const styles = StyleSheet.create({
   },
   levelTitle: {
     color: colors.text,
-    fontSize: 30,
+    fontSize: 24,
+    lineHeight: 28,
     fontWeight: '900',
-    letterSpacing: -0.8,
+    letterSpacing: -0.45,
   },
   difficultyText: {
     marginTop: 5,
@@ -1690,21 +1737,10 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     letterSpacing: 0.4,
   },
-  playerName: {
-    marginTop: 2,
-    color: 'rgba(255, 255, 255, 0.76)',
-    fontSize: 10,
-    fontWeight: '800',
-    letterSpacing: 0.35,
-  },
-  playerNamePaper: {
-    color: '#A5681F',
-  },
   totalScorePill: {
-    minWidth: 132,
-    marginTop: 7,
-    paddingHorizontal: 10,
-    paddingVertical: 7,
+    minWidth: 124,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
@@ -1725,20 +1761,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.18,
   },
   totalScoreGem: {
-    width: 27,
-    height: 27,
+    width: 28,
+    height: 28,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 9,
-    backgroundColor: '#FFD166',
+    backgroundColor: '#FFF7EA',
+    overflow: 'hidden',
   },
   totalScoreGemPaper: {
-    backgroundColor: '#D78A2C',
+    backgroundColor: '#FFF7EA',
   },
-  totalScoreGemText: {
-    color: '#5A3908',
-    fontSize: 12,
-    fontWeight: '900',
+  totalScoreGemImage: {
+    width: '100%',
+    height: '100%',
   },
   totalScoreLabel: {
     color: '#FFE7AA',
@@ -1891,6 +1927,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.24,
     shadowRadius: 24,
     elevation: 9,
+  },
+  gameStatusCardCompact: {
+    minHeight: 72,
+    marginBottom: 10,
+    paddingVertical: 7,
   },
   challengeCard: {
     width: '100%',
@@ -2189,6 +2230,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 10,
     marginTop: 14,
+  },
+  actionsCompact: {
+    marginTop: 10,
   },
   secondaryButton: {
     flex: 1,

@@ -1,6 +1,7 @@
 const SAMPLE_RATE = 12_000;
 
 type ToneStep = {
+  brightness?: number;
   duration: number;
   frequency: number;
   volume: number;
@@ -64,9 +65,14 @@ function createToneSource(steps: ToneStep[]) {
         (count - sampleIndex - 1) / (SAMPLE_RATE * 0.035),
       );
       const envelope = Math.max(0, Math.min(attack, release));
-      const wave = Math.sin(
-        (2 * Math.PI * step.frequency * sampleIndex) / SAMPLE_RATE,
-      );
+      const phase =
+        (2 * Math.PI * step.frequency * sampleIndex) / SAMPLE_RATE;
+      const brightness = step.brightness ?? 0;
+      const wave =
+        (Math.sin(phase) +
+          brightness * Math.sin(phase * 2) +
+          brightness * 0.35 * Math.sin(phase * 3)) /
+        (1 + brightness * 1.35);
       view.setInt16(
         44 + outputIndex * 2,
         Math.round(wave * envelope * step.volume * 32_767),
@@ -82,12 +88,33 @@ function createToneSource(steps: ToneStep[]) {
 }
 
 export const SUCCESS_SOUND = createToneSource([
-  { duration: 0.1, frequency: 523.25, volume: 0.24 },
-  { duration: 0.1, frequency: 659.25, volume: 0.25 },
-  { duration: 0.18, frequency: 783.99, volume: 0.27 },
+  { brightness: 0.28, duration: 0.08, frequency: 523.25, volume: 0.28 },
+  { brightness: 0.3, duration: 0.08, frequency: 659.25, volume: 0.29 },
+  { brightness: 0.32, duration: 0.1, frequency: 783.99, volume: 0.3 },
+  { brightness: 0.34, duration: 0.22, frequency: 1046.5, volume: 0.32 },
 ]);
 
 export const WRONG_SOUND = createToneSource([
   { duration: 0.14, frequency: 293.66, volume: 0.22 },
   { duration: 0.2, frequency: 196, volume: 0.24 },
+]);
+
+export const REVEAL_SOUND = createToneSource([
+  { brightness: 0.18, duration: 0.05, frequency: 523.25, volume: 0.2 },
+  { brightness: 0.24, duration: 0.07, frequency: 783.99, volume: 0.23 },
+]);
+
+export const REVEAL_COMPLETE_SOUND = createToneSource([
+  { brightness: 0.3, duration: 0.07, frequency: 880, volume: 0.25 },
+  { brightness: 0.34, duration: 0.09, frequency: 1174.66, volume: 0.27 },
+  { brightness: 0.38, duration: 0.2, frequency: 1567.98, volume: 0.29 },
+]);
+
+export const DELETE_SOUND = createToneSource([
+  { brightness: 0.12, duration: 0.04, frequency: 392, volume: 0.2 },
+  { brightness: 0.08, duration: 0.09, frequency: 246.94, volume: 0.22 },
+]);
+
+export const LETTER_SOUND = createToneSource([
+  { brightness: 0.24, duration: 0.065, frequency: 659.25, volume: 0.2 },
 ]);

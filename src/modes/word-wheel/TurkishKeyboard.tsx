@@ -1,23 +1,37 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 const KEY_ROWS = [
-  Array.from('ABCÇDEFGĞ'),
-  Array.from('HIİJKLMNOÖ'),
-  Array.from('PRSŞTUÜVYZ'),
+  Array.from('QWERTYUIOPĞÜ'),
+  Array.from('ASDFGHJKLŞİ'),
+  Array.from('ZXCVBNMÖÇ'),
 ];
 
 type Props = {
+  backspaceDisabled: boolean;
   disabled: boolean;
   onBackspace: () => void;
   onLetter: (letter: string) => void;
   paper: boolean;
 };
 
-export function TurkishKeyboard({ disabled, onBackspace, onLetter, paper }: Props) {
+export function TurkishKeyboard({
+  backspaceDisabled,
+  disabled,
+  onBackspace,
+  onLetter,
+  paper,
+}: Props) {
   return (
     <View accessibilityLabel="Türkçe harf klavyesi" style={styles.keyboard}>
       {KEY_ROWS.map((row, rowIndex) => (
-        <View key={rowIndex} style={styles.row}>
+        <View
+          key={rowIndex}
+          style={[
+            styles.row,
+            rowIndex === 1 && styles.middleRow,
+            rowIndex === 2 && styles.bottomRow,
+          ]}
+        >
           {row.map((letter) => (
             <Pressable
               accessibilityLabel={`${letter} harfi`}
@@ -37,24 +51,40 @@ export function TurkishKeyboard({ disabled, onBackspace, onLetter, paper }: Prop
               </Text>
             </Pressable>
           ))}
+          {rowIndex === KEY_ROWS.length - 1 ? (
+            <Pressable
+              accessibilityLabel="Son girilen harfi sil"
+              accessibilityRole="button"
+              disabled={disabled || backspaceDisabled}
+              onPress={onBackspace}
+              style={({ pressed }) => [
+                styles.key,
+                styles.deleteKey,
+                paper ? styles.deleteKeyPaper : styles.deleteKeyGlass,
+                pressed && styles.keyPressed,
+                (disabled || backspaceDisabled) && styles.disabled,
+              ]}
+            >
+              <Text
+                style={[
+                  styles.deleteKeyText,
+                  paper ? styles.textPaper : styles.textGlass,
+                ]}
+              >
+                ⌫
+              </Text>
+              <Text
+                style={[
+                  styles.deleteKeyLabel,
+                  paper ? styles.textPaper : styles.textGlass,
+                ]}
+              >
+                SİL
+              </Text>
+            </Pressable>
+          ) : null}
         </View>
       ))}
-      <Pressable
-        accessibilityLabel="Son harfi sil"
-        accessibilityRole="button"
-        disabled={disabled}
-        onPress={onBackspace}
-        style={({ pressed }) => [
-          styles.deleteKey,
-          paper ? styles.deletePaper : styles.deleteGlass,
-          pressed && styles.keyPressed,
-          disabled && styles.disabled,
-        ]}
-      >
-        <Text style={[styles.deleteText, paper ? styles.textPaper : styles.textGlass]}>
-          ← SON HARFİ SİL
-        </Text>
-      </Pressable>
     </View>
   );
 }
@@ -63,21 +93,27 @@ const styles = StyleSheet.create({
   keyboard: {
     width: '100%',
     maxWidth: 520,
-    marginTop: 14,
-    gap: 8,
+    marginTop: 12,
+    gap: 6,
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 3,
+    gap: 2,
+  },
+  middleRow: {
+    paddingHorizontal: 6,
+  },
+  bottomRow: {
+    paddingHorizontal: 20,
   },
   key: {
     flex: 1,
-    maxWidth: 48,
-    minHeight: 52,
+    maxWidth: 46,
+    minHeight: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 9,
+    borderRadius: 8,
     borderWidth: 1,
   },
   keyPaper: {
@@ -88,12 +124,35 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255,255,255,0.24)',
     backgroundColor: 'rgba(255,255,255,0.13)',
   },
+  deleteKey: {
+    flex: 1.45,
+    maxWidth: 68,
+  },
+  deleteKeyPaper: {
+    borderColor: '#C9BDB1',
+    backgroundColor: '#E9E0D7',
+  },
+  deleteKeyGlass: {
+    borderColor: 'rgba(255,255,255,0.3)',
+    backgroundColor: 'rgba(9,24,15,0.72)',
+  },
+  deleteKeyText: {
+    fontSize: 26,
+    lineHeight: 27,
+    fontWeight: '900',
+  },
+  deleteKeyLabel: {
+    marginTop: 1,
+    fontSize: 7,
+    fontWeight: '900',
+    letterSpacing: 0.5,
+  },
   keyPressed: {
     opacity: 0.65,
     transform: [{ scale: 0.94 }],
   },
   keyText: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: '900',
   },
   textPaper: {
@@ -101,26 +160,6 @@ const styles = StyleSheet.create({
   },
   textGlass: {
     color: '#FFFFFF',
-  },
-  deleteKey: {
-    minHeight: 48,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 11,
-    borderWidth: 1,
-  },
-  deletePaper: {
-    borderColor: '#D8CFC5',
-    backgroundColor: '#EEE6DD',
-  },
-  deleteGlass: {
-    borderColor: 'rgba(255,255,255,0.22)',
-    backgroundColor: 'rgba(9,24,15,0.45)',
-  },
-  deleteText: {
-    fontSize: 13,
-    fontWeight: '900',
-    letterSpacing: 0.7,
   },
   disabled: {
     opacity: 0.45,

@@ -5,7 +5,7 @@
 **Durum:** Planlama / entegrasyon yapılmayacak  
 **Hedef sürüm:** Uygulama V2  
 **Hedef platformlar:** iOS, Android ve mevcut Expo web uyumluluğu  
-**Ana ilke:** “Bir İşlem” modu klasik oyun ve Duvar Yıkma modundan bağımsız ilerler; yalnızca güvenli ve saf matematik/tema yardımcılarını paylaşır.
+**Ana ilke:** “Bir İşlem” modu klasik oyun ve Kelime Bulma modundan bağımsız ilerler; yalnızca güvenli ve saf matematik/tema yardımcılarını paylaşır.
 
 ---
 
@@ -24,10 +24,10 @@ Bu aşamada:
 
 ## 2. Mevcut projeyle ilişki
 
-Proje bugün Expo 57, React Native 0.86, React 19 ve TypeScript 6 kullanıyor. Uygulamada iki mod bulunuyor:
+Proje bugün Expo 57, React Native 0.86, React 19 ve TypeScript 6 kullanıyor. Uygulamada iki ana oyun alanı bulunuyor:
 
 - **Klasik:** Komşu hücrelerden yol çizip soldan sağa işlem yaparak hedefe ulaşma.
-- **Duvar Yıkma:** Aynı sınıftaki komşu hücrelerle zincir kurup duvara hasar verme.
+- **Kelime Bulma:** İpuçlarından kelimeleri çözerek seviyelerde ilerleme.
 
 “Bir İşlem” benzer matematik sembolleri kullansa da mevcut klasik modun farklı bir görünümü değildir. Temel fark şudur:
 
@@ -220,7 +220,7 @@ Klasik `src/game/engine.ts` dosyasını çok modlu koşullarla büyütmek öneri
 | Klasik `calculate` | Kural bağımlılığı nedeniyle doğrudan kullanılmaz |
 | Klasik `solver` | Komşu yol aradığı için kullanılmaz |
 | Klasik ilerleme kaydı | Kesinlikle paylaşılmaz |
-| Duvar Yıkma durumu/motoru | Paylaşılmaz |
+| Kelime Bulma durumu/motoru | Paylaşılmaz |
 
 ### 7.2 Önerilen veri modeli
 
@@ -350,7 +350,7 @@ Zorluk yalnızca hedefin büyüklüğüne göre belirlenmemelidir.
 V2’de `AppMode` aşağıdaki gibi genişleyebilir:
 
 ```ts
-type AppMode = 'classic' | 'wall-breaker' | 'numbers-round';
+type AppMode = 'classic' | 'word-wheel' | 'numbers-round';
 ```
 
 Ancak ayarlar ekranında art arda mod kartları büyütmek yerine bir **Oyun Modları** ekranına geçilmesi önerilir:
@@ -358,8 +358,8 @@ Ancak ayarlar ekranında art arda mod kartları büyütmek yerine bir **Oyun Mod
 ```text
 Oyun Modları
   ├─ Klasik Hedef Sayı
-  ├─ Bir İşlem
-  └─ Duvar Yıkma
+  ├─ Kelime Bulma
+  └─ Bir İşlem
 ```
 
 Uygulama yine son açık klasik seviyeyi korumalıdır. “Bir İşlem” modundan geri dönmek klasik ilerlemeyi, süreyi veya seçili seviyeyi sıfırlamamalıdır.
@@ -528,7 +528,7 @@ Ham ifade veya kişisel veri gönderilmesi gerekmiyorsa gönderilmemelidir. Çev
 - Eğitim ve kademeli ipucu
 - Erişilebilirlik ve hareket azaltma
 
-**Çıkış ölçütü:** Klasik oyun ve Duvar Yıkma kayıtlarında regresyon olmamalı.
+**Çıkış ölçütü:** Klasik oyun ve Kelime Bulma kayıtlarında regresyon olmamalı.
 
 ### Aşama 4 — İçerik ve denge
 
@@ -564,7 +564,7 @@ Bu özellikler ilk V2 teslimatını bloke etmemelidir.
 - Üretilen puanlı her bulmaca çözümleyici tarafından doğrulanmıştır.
 - Çözüm ve ipuçları gerçek kaynak kimliklerini birer kez kullanır.
 - Kayıt anahtarı diğer modlardan ayrıdır.
-- Moddan çıkmak klasik ve Duvar Yıkma durumunu değiştirmez.
+- Moddan çıkmak klasik ve Kelime Bulma durumunu değiştirmez.
 - Büyük metin, ekran okuyucu ve hareket azaltma ile tur tamamlanabilir.
 - iOS, Android ve web için TypeScript kontrolü geçer.
 
@@ -626,4 +626,3 @@ V2 için önerilen gerçekçi kapsam:
 - Mevcut iki temayla erişilebilir mobil deneyim
 
 Günün İşlemi zorluk ve takvim davranışı test edildikten sonra aynı V2 içinde eklenebilir. Liderlik tablosu, çevrim içi düello, negatif ve kesirli gelişmiş kurallar sonraki sürüme bırakılmalıdır.
-

@@ -2,7 +2,7 @@ import type { WordEntry } from './types';
 
 export const SCORE_PER_LETTER = 100;
 export const REVEAL_COST = 100;
-export const SESSION_DURATION_SECONDS = 120;
+export const SESSION_DURATION_SECONDS = 180;
 
 export function getBaseRoundScore(wordLength: number) {
   return Math.max(0, Math.floor(wordLength)) * SCORE_PER_LETTER;

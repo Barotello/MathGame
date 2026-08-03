@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useCallback, useEffect, useState } from 'react';
 
 import { levels } from '../data/levels';
+import { syncLeaderboardProgress } from '../services/leaderboard';
 
 import type {
   CompletionResult,
@@ -12,6 +13,8 @@ import type {
 } from '../types/progress';
 
 const STORAGE_KEY = 'hedef-sayi-progress-v2';
+const MAX_HINT_BONUS = 200;
+export const HINT_STAGE_PENALTY = 50;
 
 function createAnonymousPlayerId() {
   return `player-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
@@ -22,6 +25,7 @@ const defaultProgress: GameProgress = {
   playerId: createAnonymousPlayerId(),
   completedLevelNumbers: [],
   levelRecords: {},
+  scoreSpent: 0,
   lastLevelNumber: 1,
   settings: {
     showHints: true,
@@ -44,7 +48,14 @@ export function calculateCompletionSummary(
   const speedBonus = Math.round(remainingRatio * 600);
   const extraMoves = Math.max(0, result.pathLength - result.parPathLength);
   const efficiencyBonus = Math.max(0, 400 - extraMoves * 100);
-  const hintBonus = result.usedHint ? 0 : 200;
+  const hintStage = Math.max(
+    0,
+    Math.min(4, result.hintStage ?? (result.usedHint ? 1 : 0)),
+  );
+  const hintBonus = Math.max(
+    0,
+    MAX_HINT_BONUS - hintStage * HINT_STAGE_PENALTY,
+  );
   const score = 1000 + speedBonus + efficiencyBonus + hintBonus;
   const stars = score >= 1800 ? 3 : score >= 1400 ? 2 : 1;
 
@@ -111,6 +122,7 @@ export function useGameProgress() {
           ...parsed,
           completedLevelNumbers: parsed.completedLevelNumbers ?? [],
           levelRecords: addScoresToLegacyRecords(parsed.levelRecords ?? {}),
+          scoreSpent: Math.max(0, parsed.scoreSpent ?? 0),
           settings: {
             ...defaultProgress.settings,
             ...parsed.settings,
@@ -136,6 +148,18 @@ export function useGameProgress() {
       console.warn('İlerleme kaydı yazılamadı.', error);
     });
   }, [hydrated, progress]);
+
+  useEffect(() => {
+    if (!hydrated || !progress.playerName) return;
+
+    const syncTimer = setTimeout(() => {
+      syncLeaderboardProgress(progress.playerName!, progress.levelRecords).catch(
+        (error) => console.warn('Genel sıralama eşitlenemedi.', error),
+      );
+    }, 700);
+
+    return () => clearTimeout(syncTimer);
+  }, [hydrated, progress.levelRecords, progress.playerName]);
 
   const recordCompletion = useCallback((result: CompletionResult) => {
     const summary = calculateCompletionSummary(result);
@@ -198,6 +222,21 @@ export function useGameProgress() {
     }));
   }, []);
 
+  const spendScore = useCallback((amount: number) => {
+    if (amount <= 0) return;
+
+    setProgress((current) => {
+      const earnedScore = Object.values(current.levelRecords).reduce(
+        (sum, record) => sum + (record.bestScore ?? 0),
+        0,
+      );
+      const availableScore = Math.max(0, earnedScore - current.scoreSpent);
+
+      if (availableScore < amount) return current;
+      return { ...current, scoreSpent: current.scoreSpent + amount };
+    });
+  }, []);
+
   const recordDailyCompletion = useCallback((dateStr: string) => {
     setProgress((current) => {
       if (current.lastDailyCompletedDate === dateStr) {
@@ -219,6 +258,7 @@ export function useGameProgress() {
     recordDailyCompletion,
     setLastLevelNumber,
     setPlayerName,
+    spendScore,
     updateSettings,
   };
 }

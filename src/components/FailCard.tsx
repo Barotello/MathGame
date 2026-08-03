@@ -149,7 +149,6 @@ const styles = StyleSheet.create({
   wrapper: {
     width: '100%',
     maxWidth: 370,
-    marginTop: 16,
   },
   card: {
     overflow: 'hidden',
@@ -185,7 +184,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 140, 140, 0.6)',
   },
   iconContainerPaper: {
-    backgroundColor: '#F5DCD C',
+    backgroundColor: '#F5DCDC',
     borderColor: '#E8B6B6',
   },
   iconText: {

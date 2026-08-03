@@ -30,6 +30,7 @@ export type GameProgress = {
   playerName?: string;
   completedLevelNumbers: number[];
   levelRecords: Record<number, LevelRecord>;
+  scoreSpent: number;
   lastLevelNumber: number;
   dailyStreak?: number;
   lastDailyCompletedDate?: string;
@@ -43,4 +44,5 @@ export type CompletionResult = {
   pathLength: number;
   parPathLength: number;
   usedHint: boolean;
+  hintStage?: number;
 };
